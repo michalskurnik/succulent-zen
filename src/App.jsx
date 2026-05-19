@@ -117,7 +117,7 @@ function Tile({ type, isSelected, isLastMoved, onClick, tileRef }) {
     >
       {type !== 0 && (
         <img src={SUCCULENTS[type]} alt="" style={{
-          width: "130%", height: "130%", objectFit: "contain", pointerEvents: "none",
+          width: "110%", height: "110%", objectFit: "contain", pointerEvents: "none",
           filter: isSelected ? "brightness(1.2) drop-shadow(0 0 4px rgba(255,255,255,0.5))" : "none",
           transition: "filter 0.15s ease",
         }}/>
@@ -432,7 +432,7 @@ export default function SucculentZen() {
   };
 
   return (
-    <div style={{height:"100dvh",background:"linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),url(/bg.png)",backgroundSize:"cover",backgroundPosition:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}}>
+    <div style={{height:"100dvh",width:"100vw",background:"linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),url(/bg.png)",backgroundSize:"cover",backgroundPosition:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}}>
 
       {particles.map(p => <FlowerParticle key={p.id} {...p} />)}
       <WinCanvas visible={canvasVisible} positions={canvasPositions} />
@@ -441,7 +441,7 @@ export default function SucculentZen() {
 
       <div style={{position:"absolute",width:200,height:200,borderRadius:"50%",background:"radial-gradient(circle,rgba(60,180,150,0.07),transparent)",top:-60,right:-40,pointerEvents:"none"}}/>
 
-      <div style={{width:"100%",maxWidth:360}}>
+      <div style={{width:"100%"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
           <div style={{background:"rgba(93,202,165,0.2)",border:"1px solid rgba(93,202,165,0.4)",borderRadius:20,padding:"3px 12px",color:"#7ecfb0",fontSize:11,fontWeight:500}}>
             LEVEL {levelIndex + 1}
@@ -458,8 +458,8 @@ export default function SucculentZen() {
           {phase === PHASES.SOLVE && !isShowingPattern && (selected ? "Tap an empty tile to move" : "Tap a succulent to select")}
         </div>
 
-        <div ref={gridRef} style={{background:"rgba(0,0,0,0.35)",border:`1px solid ${isShowingPattern?"rgba(93,202,165,0.5)":"rgba(80,60,30,0.5)"}`,borderRadius:16,padding:8,marginBottom:8,transition:"border 0.3s"}}>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:3}}>
+        <div ref={gridRef} style={{background:"rgba(0,0,0,0.35)",border:`1px solid ${isShowingPattern?"rgba(93,202,165,0.5)":"rgba(80,60,30,0.5)"}`,borderRadius:16,width:"100%",alignSelf:"center",padding:8,marginBottom:8,transition:"border 0.3s"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(5, minmax(0, 1fr))",gap:3}}>
             {grid && grid.map((row, r) => row.map((cell, c) => {
               const key = `${r}-${c}`;
               if (!tileRefs.current[key]) tileRefs.current[key] = { current: null };
