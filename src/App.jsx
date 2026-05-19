@@ -117,7 +117,7 @@ function Tile({ type, isSelected, isLastMoved, onClick, tileRef }) {
     >
       {type !== 0 && (
         <img src={SUCCULENTS[type]} alt="" style={{
-          width: "90%", height: "90%", objectFit: "contain", pointerEvents: "none",
+          width: "130%", height: "130%", objectFit: "contain", pointerEvents: "none",
           filter: isSelected ? "brightness(1.2) drop-shadow(0 0 4px rgba(255,255,255,0.5))" : "none",
           transition: "filter 0.15s ease",
         }}/>
@@ -446,7 +446,7 @@ export default function SucculentZen() {
           <div style={{background:"rgba(93,202,165,0.2)",border:"1px solid rgba(93,202,165,0.4)",borderRadius:20,padding:"3px 12px",color:"#7ecfb0",fontSize:11,fontWeight:500}}>
             LEVEL {levelIndex + 1}
           </div>
-          <img src="/lotus.png" alt="" style={{width:32,height:32,objectFit:"contain",display:"block"}}/>
+          <img src="/lotus.png" alt="" style={{width:52,height:52,objectFit:"contain",display:"block"}}/>
           <div style={{fontSize:11,color:"rgba(255,255,255,0.4)"}}>
             {phase === PHASES.SHOW ? `${showTimer}s` : ""}
           </div>
