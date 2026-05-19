@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-Content *)",
+      "PowerShell($lines = Get-Content \"C:\\\\Users\\\\Michal\\\\succulent-zen\\\\src\\\\App.jsx\"; $lines | Select-Object -First 30 | ForEach-Object { $_.Length })",
+      "PowerShell($lines = Get-Content \"C:\\\\Users\\\\Michal\\\\succulent-zen\\\\src\\\\App.jsx\"; $lines[0..3] | ForEach-Object { $_.Substring\\(0, [Math]::Min\\(200, $_.Length\\)\\) })",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ]
+  }
+}
