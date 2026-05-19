@@ -446,9 +446,9 @@ export default function SucculentZen() {
           <div style={{background:"rgba(93,202,165,0.2)",border:"1px solid rgba(93,202,165,0.4)",borderRadius:20,padding:"3px 12px",color:"#7ecfb0",fontSize:11,fontWeight:500}}>
             LEVEL {levelIndex + 1}
           </div>
-          <img src="/lotus.png" alt="" style={{width:52,height:52,objectFit:"contain",display:"block"}}/>
-          <div style={{fontSize:11,color:"rgba(255,255,255,0.4)"}}>
-            {phase === PHASES.SHOW ? `${showTimer}s` : ""}
+          <img src="/lotus.png" alt="" style={{width:40,height:40,objectFit:"contain",display:"block",opacity:0.9}}/>
+          <div style={{fontSize:12,color:"rgba(255,255,255,0.7)",fontWeight:500,letterSpacing:1}}>
+            🌿 {levelIndex + 1}
           </div>
         </div>
 
@@ -458,7 +458,7 @@ export default function SucculentZen() {
           {phase === PHASES.SOLVE && !isShowingPattern && (selected ? "Tap an empty tile to move" : "Tap a succulent to select")}
         </div>
 
-        <div ref={gridRef} style={{background:"rgba(0,0,0,0.35)",border:`1px solid ${isShowingPattern?"rgba(93,202,165,0.5)":"rgba(80,60,30,0.5)"}`,borderRadius:16,width:"100%",alignSelf:"center",padding:8,marginBottom:8,transition:"border 0.3s"}}>
+        <div ref={gridRef} style={{background:"rgba(0,0,0,0.35)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:20,width:"100%",alignSelf:"center",padding:12,marginBottom:8,transition:"border 0.3s"}}>
           <div style={{display:"grid",gridTemplateColumns:"repeat(5, minmax(0, 1fr))",gap:3}}>
             {grid && grid.map((row, r) => row.map((cell, c) => {
               const key = `${r}-${c}`;
