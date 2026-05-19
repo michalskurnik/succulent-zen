@@ -432,7 +432,7 @@ export default function SucculentZen() {
   };
 
   return (
-    <div style={{minHeight:"100vh",background:"linear-gradient(170deg,#0d1f1a,#112820,#0a1a14)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",padding:"16px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}}>
+    <div style={{height:"100dvh",background:"linear-gradient(170deg,#0d1f1a,#112820,#0a1a14)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}}>
 
       {particles.map(p => <FlowerParticle key={p.id} {...p} />)}
       <WinCanvas visible={canvasVisible} positions={canvasPositions} />
@@ -457,8 +457,8 @@ export default function SucculentZen() {
           {phase === PHASES.SOLVE && !isShowingPattern && (selected ? "Tap an empty tile to move" : "Tap a succulent to select")}
         </div>
 
-        <div ref={gridRef} style={{background:"rgba(0,0,0,0.35)",border:`1px solid ${isShowingPattern?"rgba(93,202,165,0.5)":"rgba(80,60,30,0.5)"}`,borderRadius:16,padding:10,marginBottom:12,transition:"border 0.3s"}}>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:5}}>
+        <div ref={gridRef} style={{background:"rgba(0,0,0,0.35)",border:`1px solid ${isShowingPattern?"rgba(93,202,165,0.5)":"rgba(80,60,30,0.5)"}`,borderRadius:16,padding:8,marginBottom:8,transition:"border 0.3s"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:3}}>
             {grid && grid.map((row, r) => row.map((cell, c) => {
               const key = `${r}-${c}`;
               if (!tileRefs.current[key]) tileRefs.current[key] = { current: null };
