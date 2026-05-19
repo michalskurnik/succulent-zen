@@ -253,6 +253,7 @@ export default function SucculentZen() {
   const [butterflies, setButterflies] = useState([]);
   const levelCompleteRef = useRef(null);
   const unlockedRef = useRef(null);
+  const winTimerRef = useRef(null);
 
   const level = LEVELS[Math.min(levelIndex, LEVELS.length - 1)];
 
@@ -273,6 +274,9 @@ export default function SucculentZen() {
     setCanvasPositions([]);
     setFallingParticles([]);
     setButterflies([]);
+    if (winTimerRef.current) { clearTimeout(winTimerRef.current); winTimerRef.current = null; }
+    Object.values(tileRefs.current).forEach(r => { if (r?.current) { gsap.killTweensOf(r.current); gsap.set(r.current, { clearProps: "all" }); } });
+    if (gridRef.current) { gsap.killTweensOf(gridRef.current); gsap.set(gridRef.current, { clearProps: "all" }); }
     savedGrid.current = null;
     tileRefs.current = {};
   }, []);
@@ -331,7 +335,7 @@ export default function SucculentZen() {
         }))),
       });
     }, 400);
-    setTimeout(() => setWinVisible(true), 1400);
+    winTimerRef.current = setTimeout(() => setWinVisible(true), 1400);
   }, [levelIndex]);
 
   useEffect(() => {
