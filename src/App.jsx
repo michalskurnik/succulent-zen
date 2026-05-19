@@ -432,7 +432,7 @@ export default function SucculentZen() {
   };
 
   return (
-    <div style={{height:"100dvh",background:"linear-gradient(170deg,#0d1f1a,#112820,#0a1a14)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}}>
+    <div style={{height:"100dvh",background:"linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),url(/bg.png)",backgroundSize:"cover",backgroundPosition:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}}>
 
       {particles.map(p => <FlowerParticle key={p.id} {...p} />)}
       <WinCanvas visible={canvasVisible} positions={canvasPositions} />
