@@ -81,7 +81,7 @@ function gridMatches(a, b) {
   return true;
 }
 
-const PHASES = { SHOW: "show", SOLVE: "solve", WIN: "win", LOSE: "lose" };
+const PHASES = { MENU: "menu", SHOW: "show", SOLVE: "solve", WIN: "win", LOSE: "lose" };
 
 function Tile({ type, isSelected, isLastMoved, onClick, tileRef }) {
   const t = TILE_COLORS[type];
@@ -230,7 +230,7 @@ function Butterfly({ side, delay }) {
 
 export default function SucculentZen() {
   const [levelIndex, setLevelIndex] = useState(0);
-  const [phase, setPhase] = useState(PHASES.SHOW);
+  const [phase, setPhase] = useState(PHASES.MENU);
   const [grid, setGrid] = useState(null);
   const [selected, setSelected] = useState(null);
   const [movesLeft, setMovesLeft] = useState(20);
@@ -281,7 +281,7 @@ export default function SucculentZen() {
     tileRefs.current = {};
   }, []);
 
-  useEffect(() => { startLevel(levelIndex); }, [levelIndex]);
+  const _menuMountRef = useRef(false); useEffect(() => { if (!_menuMountRef.current) { _menuMountRef.current = true; return; } startLevel(levelIndex); }, [levelIndex]);
 
   useEffect(() => {
     if (phase !== PHASES.SHOW) return;
@@ -432,7 +432,7 @@ export default function SucculentZen() {
   };
 
   return (
-    <div style={{height:"100dvh",width:"100vw",background:"linear-gradient(rgba(0,0,0,0.60),rgba(0,0,0,0.60)),url(/bg.png)",backgroundSize:"cover",backgroundPosition:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}}>
+    <div style={{height:"100dvh",width:"100vw",background:"linear-gradient(rgba(0,0,0,0.60),rgba(0,0,0,0.60)),url(/bg.png)",backgroundSize:"cover",backgroundPosition:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:phase===PHASES.MENU?"center":"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}}>
 
       {particles.map(p => <FlowerParticle key={p.id} {...p} />)}
       <WinCanvas visible={canvasVisible} positions={canvasPositions} />
@@ -441,6 +441,29 @@ export default function SucculentZen() {
 
       <div style={{position:"absolute",width:200,height:200,borderRadius:"50%",background:"radial-gradient(circle,rgba(60,180,150,0.07),transparent)",top:-60,right:-40,pointerEvents:"none"}}/>
 
+      {phase === PHASES.MENU && (
+        <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",width:"100%"}}>
+          <div style={{width:"100%",maxWidth:340,background:"rgba(15,40,28,0.55)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderRadius:28,border:"1px solid rgba(93,202,165,0.18)",boxShadow:"0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(93,202,165,0.12)",padding:"40px 28px 32px",display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <div style={{textAlign:"center",marginBottom:24}}>
+              <div style={{fontSize:11,letterSpacing:"0.35em",color:"rgba(93,202,165,0.8)",textTransform:"uppercase",marginBottom:6}}>— succulent —</div>
+              <div style={{fontSize:48,fontWeight:500,color:"rgba(255,255,255,0.95)",letterSpacing:"0.08em",lineHeight:1}}>ZEN</div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginTop:12}}>
+                <div style={{width:22,height:1,background:"rgba(93,202,165,0.7)"}}/>
+                <div style={{width:4,height:4,borderRadius:"50%",background:"rgba(93,202,165,0.7)"}}/>
+                <div style={{width:22,height:1,background:"rgba(93,202,165,0.7)"}}/>
+              </div>
+            </div>
+            <div style={{fontSize:26,letterSpacing:"0.2em",marginBottom:32,opacity:0.85}}>🌿 🪴 🌱</div>
+            <button onClick={() => { startLevel(0); setLevelIndex(0); }} style={{width:200,padding:"16px",borderRadius:40,background:"linear-gradient(135deg,#5dbfa0,#2d8a6a)",border:"1px solid rgba(93,202,165,0.5)",boxShadow:"0 0 24px rgba(93,202,165,0.3)",color:"#fff",fontSize:16,fontWeight:600,letterSpacing:"0.2em",cursor:"pointer",marginBottom:12,outline:"none"}}>PLAY</button>
+            {parseInt(localStorage.getItem("szen_level")||"0",10) > 0 && (
+              <button onClick={() => { const s=parseInt(localStorage.getItem("szen_level")||"0",10); startLevel(s); setLevelIndex(s); }} style={{width:200,padding:"11px 0",borderRadius:40,background:"rgba(15,40,28,0.7)",border:"1px solid rgba(93,202,165,0.28)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",color:"rgba(255,255,255,0.75)",fontSize:13,letterSpacing:"0.05em",cursor:"pointer",marginBottom:24,outline:"none"}}>CONTINUE · LEVEL {parseInt(localStorage.getItem("szen_level")||"0",10)+1}</button>
+            )}
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.28)",letterSpacing:"0.12em",marginTop:8,textTransform:"uppercase"}}>10 levels · zen puzzle</div>
+            <div style={{fontSize:9,color:"rgba(255,255,255,0.14)",letterSpacing:"0.2em",marginTop:6}}>v1.0</div>
+          </div>
+        </div>
+      )}
+      {phase !== PHASES.MENU && (
       <div style={{width:"100%",background:"rgba(15,40,28,0.55)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderRadius:28,border:"1px solid rgba(93,202,165,0.18)",boxShadow:"0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(93,202,165,0.12)",padding:"14px 14px 10px",position:"relative",zIndex:1}}>
         <div style={{textAlign:"center",marginBottom:8}}>
           <div style={{fontSize:11,letterSpacing:"0.35em",color:"rgba(255,255,255,0.5)",textTransform:"uppercase",marginBottom:4}}>— succulent —</div>
@@ -485,6 +508,7 @@ export default function SucculentZen() {
           </div>
         </div>
       </div>
+      )}
 
       {phase === PHASES.SOLVE && (
         <div style={{display:"flex",gap:20,alignItems:"center",justifyContent:"center",width:"100%",maxWidth:360,background:"rgba(15,40,28,0.8)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderRadius:40,border:"1px solid rgba(255,255,255,0.08)",boxShadow:"0 0 30px rgba(93,202,165,0.08), inset 0 1px 0 rgba(255,255,255,0.05)",padding:"14px 28px"}}>
@@ -543,7 +567,7 @@ export default function SucculentZen() {
             <div style={{fontSize:56,marginBottom:8}}>🌸</div>
             <div style={{fontSize:22,fontWeight:500,color:"#e8d5a0",marginBottom:8}}>WELL DONE!</div>
             <div style={{fontSize:24,color:"#d4a030",letterSpacing:6,marginBottom:20}}>{"★".repeat(stars)}{"☆".repeat(3-stars)}</div>
-            <button onClick={()=>setLevelIndex(i=>i+1<LEVELS.length?i+1:0)} style={{width:"100%",padding:"12px",borderRadius:24,background:"linear-gradient(135deg,#5dbfa0,#2d8a6a)",border:"none",color:"#fff",fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:8}}>Next Level →</button>
+            <button onClick={()=>{const next=levelIndex+1<LEVELS.length?levelIndex+1:0;localStorage.setItem("szen_level",next);setLevelIndex(next);startLevel(next);}} style={{width:"100%",padding:"12px",borderRadius:24,background:"linear-gradient(135deg,#5dbfa0,#2d8a6a)",border:"none",color:"#fff",fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:8}}>Next Level →</button>
             <button onClick={()=>startLevel(levelIndex)} style={{width:"100%",padding:"10px",borderRadius:24,background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.12)",color:"rgba(255,255,255,0.7)",fontSize:13,cursor:"pointer"}}>Play Again</button>
           </div>
         </div>
