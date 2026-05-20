@@ -455,7 +455,6 @@ export default function SucculentZen() {
           <div style={{background:"rgba(93,202,165,0.2)",border:"1px solid rgba(93,202,165,0.4)",borderRadius:20,padding:"3px 12px",color:"#7ecfb0",fontSize:11,fontWeight:500}}>
             LEVEL {levelIndex + 1}
           </div>
-          <img src="/lotus.png" alt="" style={{width:40,height:40,objectFit:"contain",display:"block",opacity:0.9}}/>
           <div style={{fontSize:12,color:"rgba(255,255,255,0.7)",fontWeight:500,letterSpacing:1}}>
             🌿 {levelIndex + 1}
           </div>
