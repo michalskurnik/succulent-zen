@@ -487,33 +487,46 @@ export default function SucculentZen() {
       </div>
 
       {phase === PHASES.SOLVE && (
-        <div style={{display:"flex",gap:16,alignItems:"center",justifyContent:"center",width:"100%",maxWidth:360,background:"rgba(15,40,28,0.65)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderRadius:32,border:"1px solid rgba(93,202,165,0.18)",boxShadow:"0 8px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)",padding:"10px 20px"}}>
-          <div onClick={handleUndo}
-            style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,cursor:history.length===0?"not-allowed":"pointer",opacity:history.length===0?0.3:1,transition:"opacity 0.2s"}}>
-            <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}}>↩</div>
-            <span style={{fontSize:10,color:"rgba(255,255,255,0.4)"}}>UNDO</span>
+        <div style={{display:"flex",gap:20,alignItems:"center",justifyContent:"center",width:"100%",maxWidth:360,background:"rgba(15,40,28,0.8)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderRadius:40,border:"1px solid rgba(255,255,255,0.08)",boxShadow:"0 0 30px rgba(93,202,165,0.08), inset 0 1px 0 rgba(255,255,255,0.05)",padding:"14px 28px"}}>
+          <div onClick={handleUndo} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,cursor:history.length===0?"not-allowed":"pointer",opacity:history.length===0?0.25:1,transition:"opacity 0.2s"}}>
+            <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.12)",boxShadow:"0 0 12px rgba(255,255,255,0.04)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M4 8 C4 8 7 4 12 4 C17 4 20 8 20 12 C20 16 17 19 12 19 C8 19 5 17 4 14" stroke="rgba(255,255,255,0.65)" strokeWidth="1.5" strokeLinecap="round"/>
+                <path d="M4 4 L4 9 L9 9" stroke="rgba(255,255,255,0.65)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <span style={{fontSize:9,letterSpacing:"0.15em",color:"rgba(255,255,255,0.35)",textTransform:"uppercase"}}>undo</span>
           </div>
-
-          <div onClick={handleShowPattern}
-            style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,cursor:"pointer",opacity:isShowingPattern?0.5:1}}>
-            <div style={{width:56,height:56,borderRadius:"50%",background:showsLeft>0?"rgba(93,202,165,0.15)":"rgba(255,255,255,0.05)",border:`1px solid ${showsLeft>0?"rgba(93,202,165,0.4)":"rgba(255,255,255,0.1)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,position:"relative"}}>
-              {showsLeft > 0 ? "👁" : "🔒"}
+          <div onClick={handleShowPattern} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,cursor:"pointer",opacity:isShowingPattern?0.5:1,transition:"opacity 0.2s"}}>
+            <div style={{width:52,height:52,borderRadius:"50%",background:showsLeft>0?"rgba(93,202,165,0.12)":"rgba(255,255,255,0.04)",border:`1px solid ${showsLeft>0?"rgba(93,202,165,0.4)":"rgba(255,255,255,0.1)"}`,boxShadow:showsLeft>0?"0 0 20px rgba(93,202,165,0.25), inset 0 0 12px rgba(93,202,165,0.08)":"none",display:"flex",alignItems:"center",justifyContent:"center",position:"relative",transition:"all 0.2s",opacity:showsLeft===0?0.3:1}}>
+              {showsLeft > 0 ? (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 3 C8.5 3 6 5.5 6 9 C6 11.5 7.5 13.5 9 14.5 L9 17 L15 17 L15 14.5 C16.5 13.5 18 11.5 18 9 C18 5.5 15.5 3 12 3Z" stroke="rgba(93,202,165,0.95)" strokeWidth="1.5" fill="rgba(93,202,165,0.1)" strokeLinejoin="round"/>
+                  <line x1="9" y1="19" x2="15" y2="19" stroke="rgba(93,202,165,0.95)" strokeWidth="1.5" strokeLinecap="round"/>
+                  <line x1="10" y1="21" x2="14" y2="21" stroke="rgba(93,202,165,0.95)" strokeWidth="1.5" strokeLinecap="round"/>
+                  <line x1="12" y1="1.5" x2="12" y2="0" stroke="rgba(93,202,165,0.7)" strokeWidth="1.5" strokeLinecap="round"/>
+                  <line x1="5" y1="5" x2="3.5" y2="3.5" stroke="rgba(93,202,165,0.7)" strokeWidth="1.5" strokeLinecap="round"/>
+                  <line x1="19" y1="5" x2="20.5" y2="3.5" stroke="rgba(93,202,165,0.7)" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <rect x="5" y="11" width="14" height="10" rx="2" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5"/>
+                  <path d="M8 11 V7 C8 4.8 10 3 12 3 C14 3 16 4.8 16 7 V11" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              )}
               {showsLeft > 0 && (
-                <div style={{position:"absolute",top:-4,right:-4,width:18,height:18,borderRadius:"50%",background:"#5dbfa0",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:600,color:"#0d1f1a"}}>
+                <div style={{position:"absolute",top:-5,right:-5,width:18,height:18,borderRadius:"50%",background:"rgba(93,202,165,0.9)",boxShadow:"0 0 8px rgba(93,202,165,0.6)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:"#0d1f1a"}}>
                   {showsLeft}
                 </div>
               )}
             </div>
-            <span style={{fontSize:10,color:showsLeft>0?"rgba(93,202,165,0.8)":"rgba(255,255,255,0.3)"}}>
-              {showsLeft > 0 ? "SHOW" : "LOCKED"}
-            </span>
+            <span style={{fontSize:9,letterSpacing:"0.15em",color:showsLeft>0?"rgba(93,202,165,0.7)":"rgba(255,255,255,0.25)",textTransform:"uppercase"}}>hint</span>
           </div>
-
           <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-            <div style={{width:64,height:64,borderRadius:"50%",background:"radial-gradient(circle,rgba(200,100,130,0.5),rgba(120,40,70,0.7))",border:"2px solid #c86480",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,fontWeight:600,color:"#fff",boxShadow:"0 0 16px rgba(200,100,130,0.3)"}}>
-              {movesLeft}
+            <div style={{width:60,height:60,borderRadius:"50%",background:"radial-gradient(circle at 40% 35%, rgba(210,100,135,0.65), rgba(80,15,40,0.88))",border:"1.5px solid rgba(210,110,140,0.55)",boxShadow:"0 0 24px rgba(200,80,120,0.35), inset 0 1px 0 rgba(255,255,255,0.1)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <span style={{fontSize:22,fontWeight:500,color:"#fff",textShadow:"0 0 12px rgba(255,150,180,0.5)"}}>{movesLeft}</span>
             </div>
-            <span style={{fontSize:10,color:"rgba(255,255,255,0.4)"}}>MOVES</span>
+            <span style={{fontSize:9,letterSpacing:"0.15em",color:"rgba(255,255,255,0.35)",textTransform:"uppercase"}}>moves</span>
           </div>
         </div>
       )}
