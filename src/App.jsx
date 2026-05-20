@@ -281,7 +281,7 @@ export default function SucculentZen() {
     tileRefs.current = {};
   }, []);
 
-  const _menuMountRef = useRef(false); useEffect(() => { if (!_menuMountRef.current) { _menuMountRef.current = true; return; } startLevel(levelIndex); }, [levelIndex]);
+
 
   useEffect(() => {
     if (phase !== PHASES.SHOW) return;
