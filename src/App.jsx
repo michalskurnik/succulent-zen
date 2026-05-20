@@ -442,6 +442,15 @@ export default function SucculentZen() {
       <div style={{position:"absolute",width:200,height:200,borderRadius:"50%",background:"radial-gradient(circle,rgba(60,180,150,0.07),transparent)",top:-60,right:-40,pointerEvents:"none"}}/>
 
       <div style={{width:"100%",background:"rgba(15,40,28,0.55)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderRadius:28,border:"1px solid rgba(93,202,165,0.18)",boxShadow:"0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(93,202,165,0.12)",padding:"14px 14px 10px",position:"relative",zIndex:1}}>
+        <div style={{textAlign:"center",marginBottom:8}}>
+          <div style={{fontSize:11,letterSpacing:"0.35em",color:"rgba(255,255,255,0.5)",textTransform:"uppercase",marginBottom:4}}>— succulent —</div>
+          <div style={{fontSize:32,fontWeight:500,color:"rgba(255,255,255,0.9)",letterSpacing:"0.05em",lineHeight:1}}>ZEN</div>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginTop:6}}>
+            <div style={{width:22,height:1,background:"rgba(93,202,165,0.7)"}}/>
+            <div style={{width:4,height:4,borderRadius:"50%",background:"rgba(93,202,165,0.7)"}}/>
+            <div style={{width:22,height:1,background:"rgba(93,202,165,0.7)"}}/>
+          </div>
+        </div>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
           <div style={{background:"rgba(93,202,165,0.2)",border:"1px solid rgba(93,202,165,0.4)",borderRadius:20,padding:"3px 12px",color:"#7ecfb0",fontSize:11,fontWeight:500}}>
             LEVEL {levelIndex + 1}
