@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Sensitive release/ad configuration
+RELEASE_NOTES.txt
+*.keystore
+*.jks

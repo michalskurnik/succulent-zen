@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Succulent Zen</string>
+    <string name="title_activity_main">Succulent Zen</string>
+    <string name="package_name">com.succulentzen.app</string>
+    <string name="custom_url_scheme">com.succulentzen.app</string>
+</resources>

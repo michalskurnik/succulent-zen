@@ -1,0 +1,10 @@
+{
+  "appId": "com.succulentzen.app",
+  "appName": "Succulent Zen",
+  "webDir": "dist",
+  "plugins": {
+    "AdMob": {
+      "appId": "ca-app-pub-8922520661942995~2493007409"
+    }
+  }
+}
