@@ -5,7 +5,7 @@
   "plugins": {
     "AdMob": {
       "appId": "ca-app-pub-8922520661942995~2493007409",
-      "appIdIos": "ca-app-pub-REPLACE_WITH_IOS_ADMOB_APP_ID"
+      "appIdIos": "ca-app-pub-8922520661942995~1687192196"
     }
   }
 }
