@@ -64,15 +64,27 @@ const sounds = {
 };
 // ─────────────────────────────────────────────────────────
 
+function fisherYates(arr) {
+  const a = [...arr];
+  for (let i2 = a.length - 1; i2 > 0; i2--) {
+    const j = Math.floor(Math.random() * (i2 + 1));
+    [a[i2], a[j]] = [a[j], a[i2]];
+  }
+  return a;
+}
+
 function shuffle(pattern) {
   const colored = [];
   pattern.forEach(row => row.forEach(cell => { if (cell !== 0) colored.push(cell); }));
-  const grid = Array.from({ length: 5 }, () => Array(5).fill(0));
   const positions = [];
   for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) positions.push([r, c]);
-  const shuffled = [...positions].sort(() => Math.random() - 0.5).slice(0, colored.length);
-  const colorShuffled = [...colored].sort(() => Math.random() - 0.5);
-  shuffled.forEach(([r, c], i) => { grid[r][c] = colorShuffled[i]; });
+  let grid, attempts = 0;
+  do {
+    const pos = fisherYates(positions).slice(0, colored.length);
+    const col = fisherYates(colored);
+    grid = Array.from({ length: 5 }, () => Array(5).fill(0));
+    pos.forEach(([r, c], k) => { grid[r][c] = col[k]; });
+  } while (++attempts < 20 && gridMatches(grid, pattern));
   return grid;
 }
 
@@ -82,6 +94,25 @@ function gridMatches(a, b) {
       if (a[r][c] !== b[r][c]) return false;
   return true;
 }
+
+(function validateLevels() {
+  const issues = [];
+  LEVELS.forEach((lvl, idx) => {
+    const flat = lvl.pattern.flat();
+    const tiles = flat.filter(v => v !== 0);
+    const empties = flat.filter(v => v === 0);
+    const bad = flat.filter(v => ![0,1,2,3].includes(v));
+    const n = idx + 1;
+    if (lvl.pattern.length !== 5 || lvl.pattern.some(row => row.length !== 5)) { issues.push("L"+n+": not 5x5"); return; }
+    if (bad.length) { issues.push("L"+n+": bad values"); return; }
+    if (!tiles.length) { issues.push("L"+n+": no tiles"); return; }
+    if (!empties.length) { issues.push("L"+n+": no empty cells"); return; }
+    if (lvl.maxMoves < tiles.length) { issues.push("L"+n+": maxMoves="+lvl.maxMoves+" < tiles="+tiles.length); return; }
+    console.log("[szen] Level "+n+": OK — "+tiles.length+" tiles, "+empties.length+" empty, maxMoves="+lvl.maxMoves);
+  });
+  if (issues.length) console.error("[szen] BROKEN levels:", issues);
+  else console.log("[szen] All 10 levels validated OK.");
+}());
 
 const PHASES = { MENU: "menu", SHOW: "show", SOLVE: "solve", WIN: "win", LOSE: "lose" };
 
@@ -257,6 +288,7 @@ export default function SucculentZen() {
   const levelCompleteRef = useRef(null);
   const unlockedRef = useRef(null);
   const winTimerRef = useRef(null);
+  const levelPatternRef = useRef(null);
 
 
   useEffect(() => {
@@ -308,6 +340,7 @@ export default function SucculentZen() {
     if (gridRef.current) { gsap.killTweensOf(gridRef.current); gsap.set(gridRef.current, { clearProps: "all" }); }
     savedGrid.current = null;
     tileRefs.current = {};
+    levelPatternRef.current = lvl.pattern;
   }, []);
 
 
@@ -315,7 +348,7 @@ export default function SucculentZen() {
   useEffect(() => {
     if (phase !== PHASES.SHOW) return;
     if (showTimer <= 0) {
-      setGrid(shuffle(level.pattern));
+      setGrid(shuffle(levelPatternRef.current));
       setPhase(PHASES.SOLVE);
       return;
     }
