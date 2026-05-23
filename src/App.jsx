@@ -589,7 +589,7 @@ export default function SucculentZen() {
           {phase === PHASES.SOLVE && !isShowingPattern && (selected ? "Tap an empty tile to move" : "Tap a succulent to select")}
         </div>
 
-        <div ref={gridRef} style={{background:"rgba(0,0,0,0.22)",borderRadius:16,width:"100%",alignSelf:"center",padding:10,transition:"border 0.3s",border:"1px solid rgba(255,255,255,0.07)",flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+        <div ref={gridRef} style={{background:"rgba(0,0,0,0.22)",borderRadius:16,width:"100%",alignSelf:"center",padding:10,paddingBottom:"100px",transition:"border 0.3s",border:"1px solid rgba(255,255,255,0.07)",flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
           <div style={{display:"grid",gridTemplateColumns:"repeat(5, minmax(0, 1fr))",gridTemplateRows:"repeat(5, minmax(0, 1fr))",gap:3,width:"100%",aspectRatio:"1",maxHeight:"100%"}}>
             {grid && grid.map((row, r) => row.map((cell, c) => {
               const key = `${r}-${c}`;
