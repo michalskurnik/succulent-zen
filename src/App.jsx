@@ -468,7 +468,7 @@ export default function SucculentZen() {
     setShowsLeft(s => s - 1);
     setGrid(level.pattern.map(r => [...r]));
     setTimeout(() => {
-      setGrid(savedGrid.current);
+      setGrid(savedGrid.current.map(r => [...r]));
       setIsShowingPattern(false);
     }, 2000);
   };
@@ -523,7 +523,7 @@ export default function SucculentZen() {
     if (history.length === 0 || isShowingPattern) return;
     sounds.undo();
     const prev = history[history.length - 1];
-    setGrid(prev.grid);
+    setGrid(prev.grid.map(r => [...r]));
     setMovesLeft(prev.movesLeft);
     setHistory(h => h.slice(0, -1));
     setSelected(null);
@@ -564,7 +564,7 @@ export default function SucculentZen() {
         </div>
       )}
       {phase !== PHASES.MENU && (
-      <div style={{width:"100%",background:"rgba(15,40,28,0.55)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderRadius:28,border:"1px solid rgba(93,202,165,0.18)",boxShadow:"0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(93,202,165,0.12)",padding:phase===PHASES.SOLVE?"14px 14px 116px":"14px 14px 10px",position:"relative",zIndex:1}}>
+      <div style={{width:"100%",background:"rgba(15,40,28,0.55)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderRadius:28,border:"1px solid rgba(93,202,165,0.18)",boxShadow:"0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(93,202,165,0.12)",padding:"14px 14px 10px",position:"relative",zIndex:1}}>
         <div style={{textAlign:"center",marginBottom:8}}>
           <div style={{fontSize:11,letterSpacing:"0.35em",color:"rgba(255,255,255,0.5)",textTransform:"uppercase",marginBottom:4}}>— succulent —</div>
           <div style={{fontSize:32,fontWeight:500,color:"rgba(255,255,255,0.9)",letterSpacing:"0.05em",lineHeight:1}}>ZEN</div>
