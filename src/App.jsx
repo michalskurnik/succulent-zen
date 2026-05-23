@@ -564,7 +564,7 @@ export default function SucculentZen() {
         </div>
       )}
       {phase !== PHASES.MENU && (
-      <div style={{width:"100%",background:"rgba(15,40,28,0.55)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderRadius:28,border:"1px solid rgba(93,202,165,0.18)",boxShadow:"0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(93,202,165,0.12)",padding:"14px 14px 10px",position:"relative",zIndex:1}}>
+      <div style={{width:"100%",background:"rgba(15,40,28,0.55)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderRadius:28,border:"1px solid rgba(93,202,165,0.18)",boxShadow:"0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(93,202,165,0.12)",padding:phase===PHASES.SOLVE?"14px 14px 116px":"14px 14px 10px",position:"relative",zIndex:1}}>
         <div style={{textAlign:"center",marginBottom:8}}>
           <div style={{fontSize:11,letterSpacing:"0.35em",color:"rgba(255,255,255,0.5)",textTransform:"uppercase",marginBottom:4}}>— succulent —</div>
           <div style={{fontSize:32,fontWeight:500,color:"rgba(255,255,255,0.9)",letterSpacing:"0.05em",lineHeight:1}}>ZEN</div>
@@ -611,7 +611,7 @@ export default function SucculentZen() {
       )}
 
       {phase === PHASES.SOLVE && (
-        <div style={{display:"flex",gap:20,alignItems:"center",justifyContent:"center",width:"100%",maxWidth:360,background:"rgba(15,40,28,0.8)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderRadius:40,border:"1px solid rgba(255,255,255,0.08)",boxShadow:"0 0 30px rgba(93,202,165,0.08), inset 0 1px 0 rgba(255,255,255,0.05)",padding:"14px 28px"}}>
+        <div style={{display:"flex",gap:20,alignItems:"center",justifyContent:"center",position:"fixed",bottom:12,left:0,right:0,margin:"0 auto",width:"calc(100% - 24px)",maxWidth:360,zIndex:5,background:"rgba(15,40,28,0.8)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderRadius:40,border:"1px solid rgba(255,255,255,0.08)",boxShadow:"0 0 30px rgba(93,202,165,0.08), inset 0 1px 0 rgba(255,255,255,0.05)",padding:"14px 28px"}}>
           <div onClick={handleUndo} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,cursor:history.length===0?"not-allowed":"pointer",opacity:history.length===0?0.25:1,transition:"opacity 0.2s"}}>
             <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.12)",boxShadow:"0 0 12px rgba(255,255,255,0.04)",display:"flex",alignItems:"center",justifyContent:"center"}}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
