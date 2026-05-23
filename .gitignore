@@ -24,6 +24,7 @@ dist-ssr
 *.sw?
 
 .vercel
+.clau?e/
 
 # Sensitive release/ad configuration
 RELEASE_NOTES.txt

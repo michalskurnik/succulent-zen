@@ -1,5 +1,5 @@
 {
-  "appId": "com.succulentzen.app",
+  "appId": "com.michalskurnik.succulentzen",
   "appName": "Succulent Zen",
   "webDir": "dist",
   "plugins": {
