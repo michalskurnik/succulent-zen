@@ -289,11 +289,48 @@ export default function SucculentZen() {
   const unlockedRef = useRef(null);
   const winTimerRef = useRef(null);
   const levelPatternRef = useRef(null);
+  const [muted, setMuted] = useState(() => localStorage.getItem("szen_mute") === "1");
+  const bgMusicRef = useRef(null);
+  const musicStartedRef = useRef(false);
 
 
   useEffect(() => {
     AdMob.initialize({ initializeForTesting: true }).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    const audio = new Audio("/Glass_Succulent.mp3");
+    audio.loop = true;
+    audio.volume = 0.35;
+    bgMusicRef.current = audio;
+    return () => { audio.pause(); audio.src = ""; };
+  }, []);
+
+  useEffect(() => {
+    const audio = bgMusicRef.current;
+    if (!audio) return;
+    if (muted) { audio.pause(); }
+    else if (musicStartedRef.current) { audio.play().catch(() => {}); }
+  }, [muted]);
+
+  const startMusic = useCallback(() => {
+    if (musicStartedRef.current || muted) return;
+    musicStartedRef.current = true;
+    bgMusicRef.current?.play().catch(() => {});
+  }, [muted]);
+
+  const handleMuteToggle = useCallback(() => {
+    const willUnmute = muted;
+    if (willUnmute && !musicStartedRef.current) {
+      musicStartedRef.current = true;
+      bgMusicRef.current?.play().catch(() => {});
+    }
+    setMuted(m => {
+      const next = !m;
+      localStorage.setItem("szen_mute", next ? "1" : "0");
+      return next;
+    });
+  }, [muted]);
 
   const showRewardedAd = useCallback(async (onRewarded) => {
     setAdLoading(true);
@@ -494,12 +531,13 @@ export default function SucculentZen() {
   };
 
   return (
-    <div style={{height:"100dvh",width:"100vw",background:"linear-gradient(rgba(0,0,0,0.60),rgba(0,0,0,0.60)),url(/bg.png)",backgroundSize:"cover",backgroundPosition:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:phase===PHASES.MENU?"center":"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}}>
-
+    <div style={{height:"100dvh",width:"100vw",background:"linear-gradient(rgba(0,0,0,0.60),rgba(0,0,0,0.60)),url(/bg.png)",backgroundSize:"cover",backgroundPosition:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:phase===PHASES.MENU?"center":"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}} onPointerDown={startMusic}>
       {particles.map(p => <FlowerParticle key={p.id} {...p} />)}
       <WinCanvas visible={canvasVisible} positions={canvasPositions} />
       {fallingParticles.map(p => <FallingParticle key={p.id} {...p} />)}
       {butterflies.map(b => <Butterfly key={b.id} {...b} />)}
+
+      <button onClick={(e) => { e.stopPropagation(); handleMuteToggle(); }} style={{position:"fixed",top:16,right:16,zIndex:100,background:"rgba(15,40,28,0.75)",border:"1px solid rgba(93,202,165,0.3)",borderRadius:"50%",width:40,height:40,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",fontSize:18,backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",outline:"none",color:"#fff",boxShadow:"0 2px 12px rgba(0,0,0,0.4)"}}>{muted ? "🔇" : "🔊"}</button>
 
       <div style={{position:"absolute",width:200,height:200,borderRadius:"50%",background:"radial-gradient(circle,rgba(60,180,150,0.07),transparent)",top:-60,right:-40,pointerEvents:"none"}}/>
 
