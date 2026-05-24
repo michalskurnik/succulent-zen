@@ -299,6 +299,7 @@ export default function SucculentZen() {
   const [muted, setMuted] = useState(() => localStorage.getItem("szen_mute") === "1");
   const bgMusicRef = useRef(null);
   const musicStartedRef = useRef(false);
+  const lastMuteTouchRef = useRef(0);
 
 
   useEffect(() => {
@@ -345,24 +346,46 @@ export default function SucculentZen() {
     else if (musicStartedRef.current) { audio.play().catch(() => {}); }
   }, [muted]);
 
+  const resumeMusic = useCallback(() => {
+    const audio = bgMusicRef.current;
+    if (!audio) return;
+    musicStartedRef.current = true;
+    audio.play().catch(() => {
+      musicStartedRef.current = false;
+    });
+  }, []);
+
   const startMusic = useCallback(() => {
     if (musicStartedRef.current || muted) return;
-    musicStartedRef.current = true;
-    bgMusicRef.current?.play().catch(() => {});
-  }, [muted]);
+    resumeMusic();
+  }, [muted, resumeMusic]);
 
   const handleMuteToggle = useCallback(() => {
-    const willUnmute = muted;
-    if (willUnmute && !musicStartedRef.current) {
-      musicStartedRef.current = true;
-      bgMusicRef.current?.play().catch(() => {});
-    }
     setMuted(m => {
       const next = !m;
       localStorage.setItem("szen_mute", next ? "1" : "0");
+      if (next) {
+        bgMusicRef.current?.pause();
+      } else {
+        resumeMusic();
+      }
       return next;
     });
-  }, [muted]);
+  }, [resumeMusic]);
+
+  const activateMuteToggle = useCallback((event) => {
+    event?.preventDefault?.();
+    event?.stopPropagation?.();
+    lastMuteTouchRef.current = Date.now();
+    handleMuteToggle();
+  }, [handleMuteToggle]);
+
+  const handleMuteClick = useCallback((event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (Date.now() - lastMuteTouchRef.current < 700) return;
+    handleMuteToggle();
+  }, [handleMuteToggle]);
 
   const showRewardedAd = useCallback(async (onRewarded) => {
     setAdLoading(true);
@@ -600,7 +623,17 @@ export default function SucculentZen() {
       {fallingParticles.map(p => <FallingParticle key={p.id} {...p} />)}
       {butterflies.map(b => <Butterfly key={b.id} {...b} />)}
 
-      <button onClick={(e) => { e.stopPropagation(); handleMuteToggle(); }} style={{position:"fixed",top:16,right:16,zIndex:100,background:"rgba(15,40,28,0.75)",border:"1px solid rgba(93,202,165,0.3)",borderRadius:"50%",width:40,height:40,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",fontSize:18,backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",outline:"none",color:"#fff",boxShadow:"0 2px 12px rgba(0,0,0,0.4)"}}>{muted ? "🔇" : "🔊"}</button>
+      <button
+        type="button"
+        aria-label={muted ? "Turn sound on" : "Turn sound off"}
+        onPointerDown={(e) => { e.stopPropagation(); }}
+        onTouchStart={(e) => { e.stopPropagation(); }}
+        onTouchEnd={activateMuteToggle}
+        onClick={handleMuteClick}
+        style={{position:"fixed",top:"max(64px, calc(env(safe-area-inset-top, 0px) + 12px))",right:"calc(env(safe-area-inset-right, 0px) + 12px)",zIndex:9999,background:"rgba(15,40,28,0.82)",border:"1px solid rgba(93,202,165,0.42)",borderRadius:"50%",width:52,height:52,padding:0,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",fontSize:20,lineHeight:1,backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",outline:"none",color:"#fff",boxShadow:"0 2px 14px rgba(0,0,0,0.42)",touchAction:"manipulation",WebkitUserSelect:"none",userSelect:"none",pointerEvents:"auto"}}
+      >
+        {muted ? "🔇" : "🔊"}
+      </button>
 
       <div style={{position:"absolute",width:200,height:200,borderRadius:"50%",background:"radial-gradient(circle,rgba(60,180,150,0.07),transparent)",top:-60,right:-40,pointerEvents:"none"}}/>
 
