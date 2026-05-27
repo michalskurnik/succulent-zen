@@ -154,7 +154,7 @@ function Tile({ type, isSelected, isLastMoved, isBloom, onClick, tileRef }) {
     >
       {type !== 0 && (
         <img src={(isBloom && SUCCULENTS_BLOOM[type]) ? SUCCULENTS_BLOOM[type] : SUCCULENTS[type]} alt="" style={{
-          width: "90%", height: "90%", objectFit: "contain", pointerEvents: "none",
+          width: type === 4 ? "100%" : "90%", height: type === 4 ? "100%" : "90%", objectFit: type === 4 ? "cover" : "contain", borderRadius: type === 4 ? "50%" : 0, pointerEvents: "none",
           filter: isSelected ? "brightness(1.2) drop-shadow(0 0 4px rgba(255,255,255,0.5))" : "none",
           transition: "filter 0.15s ease",
         }}/>
