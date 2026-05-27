@@ -710,10 +710,6 @@ export default function SucculentZen() {
 
       <style>{`
 
-      <div style={{position:"fixed",bottom:12,left:12,zIndex:100,display:"flex",gap:6}}>
-        <button onClick={()=>{const p=Math.max(0,levelIndex-1);setLevelIndex(p);startLevel(p);}} style={{background:"rgba(0,0,0,0.5)",border:"1px solid rgba(255,255,255,0.2)",color:"rgba(255,255,255,0.6)",borderRadius:8,padding:"4px 8px",fontSize:11,cursor:"pointer"}}>◀ PREV</button>
-        <button onClick={()=>{const n=Math.min(LEVELS.length-1,levelIndex+1);setLevelIndex(n);startLevel(n);}} style={{background:"rgba(0,0,0,0.5)",border:"1px solid rgba(255,255,255,0.2)",color:"rgba(255,255,255,0.6)",borderRadius:8,padding:"4px 8px",fontSize:11,cursor:"pointer"}}>NEXT ▶</button>
-      </div>
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
       `}</style>
