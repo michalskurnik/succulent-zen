@@ -359,6 +359,7 @@ export default function SucculentZen() {
     }
   }, []);
   const level = LEVELS[Math.min(levelIndex, LEVELS.length - 1)];
+  const isDev = new URLSearchParams(window.location.search).get('dev') === 'true';
 
   const startLevel = useCallback((idx) => {
     const lvl = LEVELS[Math.min(idx, LEVELS.length - 1)];
@@ -708,6 +709,14 @@ export default function SucculentZen() {
       )}
 
       <style>{`
+
+      {isDev && (
+        <div style={{position:"fixed",top:8,right:8,zIndex:100,display:"flex",alignItems:"center",gap:4,background:"rgba(0,0,0,0.75)",borderRadius:20,padding:"4px 10px",border:"1px solid rgba(255,220,0,0.5)",backdropFilter:"blur(8px)"}}>
+          <button onClick={()=>{const p=Math.max(0,levelIndex-1);setLevelIndex(p);startLevel(p);}} style={{background:"none",border:"none",color:"#ffdc00",cursor:"pointer",fontSize:16,padding:"0 4px",lineHeight:1}}>◀</button>
+          <span style={{color:"#ffdc00",fontSize:11,fontWeight:700,letterSpacing:"0.08em",userSelect:"none"}}>L{levelIndex+1}/{LEVELS.length}</span>
+          <button onClick={()=>{const n=Math.min(LEVELS.length-1,levelIndex+1);setLevelIndex(n);startLevel(n);}} style={{background:"none",border:"none",color:"#ffdc00",cursor:"pointer",fontSize:16,padding:"0 4px",lineHeight:1}}>▶</button>
+        </div>
+      )}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
       `}</style>
