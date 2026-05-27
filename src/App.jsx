@@ -710,13 +710,10 @@ export default function SucculentZen() {
 
       <style>{`
 
-      {isDev && (
-        <div style={{position:"fixed",top:8,left:8,zIndex:100,display:"flex",alignItems:"center",gap:4,background:"rgba(0,0,0,0.75)",borderRadius:20,padding:"4px 10px",border:"1px solid rgba(255,220,0,0.5)",backdropFilter:"blur(8px)"}}>
-          <button onClick={()=>{const p=Math.max(0,levelIndex-1);setLevelIndex(p);startLevel(p);}} style={{background:"none",border:"none",color:"#ffdc00",cursor:"pointer",fontSize:16,padding:"0 4px",lineHeight:1}}>◀</button>
-          <span style={{color:"#ffdc00",fontSize:11,fontWeight:700,letterSpacing:"0.08em",userSelect:"none"}}>L{levelIndex+1}/{LEVELS.length}</span>
-          <button onClick={()=>{const n=Math.min(LEVELS.length-1,levelIndex+1);setLevelIndex(n);startLevel(n);}} style={{background:"none",border:"none",color:"#ffdc00",cursor:"pointer",fontSize:16,padding:"0 4px",lineHeight:1}}>▶</button>
-        </div>
-      )}
+      <div style={{position:"fixed",bottom:12,left:12,zIndex:100,display:"flex",gap:6}}>
+        <button onClick={()=>{const p=Math.max(0,levelIndex-1);setLevelIndex(p);startLevel(p);}} style={{background:"rgba(0,0,0,0.5)",border:"1px solid rgba(255,255,255,0.2)",color:"rgba(255,255,255,0.6)",borderRadius:8,padding:"4px 8px",fontSize:11,cursor:"pointer"}}>◀ PREV</button>
+        <button onClick={()=>{const n=Math.min(LEVELS.length-1,levelIndex+1);setLevelIndex(n);startLevel(n);}} style={{background:"rgba(0,0,0,0.5)",border:"1px solid rgba(255,255,255,0.2)",color:"rgba(255,255,255,0.6)",borderRadius:8,padding:"4px 8px",fontSize:11,cursor:"pointer"}}>NEXT ▶</button>
+      </div>
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
       `}</style>
