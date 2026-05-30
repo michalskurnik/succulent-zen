@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { gsap } from "gsap";
-import { AdMob, RewardAdPluginEvents } from "@capacitor-community/admob";
+import { AdMob, AdmobConsentStatus, RewardAdPluginEvents } from "@capacitor-community/admob";
 import { Capacitor } from "@capacitor/core";
 
 const SUCCULENTS = {
@@ -53,7 +53,9 @@ function playTone(freq, type = "sine", duration = 0.12, vol = 0.18, delay = 0) {
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
     osc.start(ctx.currentTime + delay);
     osc.stop(ctx.currentTime + delay + duration + 0.05);
-  } catch(e) {}
+  } catch {
+    // Audio is optional; keep gameplay usable if the browser blocks audio.
+  }
 }
 const sounds = {
   select: () => playTone(520, "sine", 0.08, 0.15),
@@ -119,12 +121,18 @@ function gridMatches(a, b) {
 
 const PHASES = { MENU: "menu", SHOW: "show", SOLVE: "solve", WIN: "win", LOSE: "lose" };
 
-function Tile({ type, isSelected, isLastMoved, isBloom, onClick, tileRef }) {
+function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef }) {
   const t = TILE_COLORS[type];
   const prevMoved = useRef(false);
+  const tileRef = useRef(null);
 
   useEffect(() => {
-    if (isLastMoved && !prevMoved.current && tileRef?.current) {
+    setTileRef(tileRef.current);
+    return () => setTileRef(null);
+  }, [setTileRef]);
+
+  useEffect(() => {
+    if (isLastMoved && !prevMoved.current && tileRef.current) {
       gsap.fromTo(tileRef.current,
         { scale: 1.4, rotation: -8, filter: "brightness(1.5)" },
         { scale: 1, rotation: 0, filter: "brightness(1)", duration: 0.4, ease: "elastic.out(1.2, 0.5)" }
@@ -144,7 +152,6 @@ function Tile({ type, isSelected, isLastMoved, isBloom, onClick, tileRef }) {
         borderRadius: "50%",
         background: t.bg,
         border: `1.5px solid ${isSelected ? "#fff" : t.border}`,
-        boxShadow: isSelected ? "0 0 0 3px #fff, 0 0 20px rgba(255,255,255,0.3)" : "none",
         boxShadow: isSelected ? "0 0 0 3px #fff, 0 0 20px rgba(255,255,255,0.3)" : (type !== 0 ? "0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)" : "none"),
         transform: isSelected ? "scale(1.14)" : "scale(1)",
         transition: "transform 0.15s ease, box-shadow 0.15s ease",
@@ -163,7 +170,7 @@ function Tile({ type, isSelected, isLastMoved, isBloom, onClick, tileRef }) {
   );
 }
 
-function FlowerParticle({ x, y, emoji, delay }) {
+function FlowerParticle({ x, y, emoji, delay, fontSize }) {
   const ref = useRef(null);
   useEffect(() => {
     if (!ref.current) return;
@@ -179,9 +186,9 @@ function FlowerParticle({ x, y, emoji, delay }) {
         onComplete: () => gsap.to(ref.current, { opacity: 0, y: "-=30", duration: 0.4 }),
       }
     );
-  }, []);
+  }, [delay, x, y]);
   return (
-    <div ref={ref} style={{ position:"fixed", left:x, top:y, fontSize: 24+Math.random()*16, pointerEvents:"none", zIndex:15 }}>
+    <div ref={ref} style={{ position:"fixed", left:x, top:y, fontSize, pointerEvents:"none", zIndex:15 }}>
       {emoji}
     </div>
   );
@@ -233,7 +240,7 @@ function WinCanvas({ visible, positions }) {
   return <canvas ref={canvasRef} style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 11, width: "100vw", height: "100vh" }} />;
 }
 
-function FallingParticle({ x, delay, emoji }) {
+function FallingParticle({ x, delay, emoji, fontSize }) {
   const ref = useRef(null);
   useEffect(() => {
     if (!ref.current) return;
@@ -242,8 +249,8 @@ function FallingParticle({ x, delay, emoji }) {
       { y: window.innerHeight + 60, rotation: (Math.random() > 0.5 ? 1 : -1) * 400, duration: 2.5 + Math.random() * 1.5, delay, ease: "power1.in",
         onComplete: () => { if (ref.current) ref.current.style.display = "none"; } }
     );
-  }, []);
-  return <div ref={ref} style={{ position: "fixed", left: 0, top: 0, fontSize: 18 + Math.random() * 14, pointerEvents: "none", zIndex: 16 }}>{emoji}</div>;
+  }, [delay, x]);
+  return <div ref={ref} style={{ position: "fixed", left: 0, top: 0, fontSize, pointerEvents: "none", zIndex: 16 }}>{emoji}</div>;
 }
 
 function Butterfly({ side, delay }) {
@@ -261,7 +268,7 @@ function Butterfly({ side, delay }) {
           gsap.to(ref.current, { opacity: 0, duration: 0.5, delay: 3.2 });
         } }
     );
-  }, []);
+  }, [delay, side]);
   return <div ref={ref} style={{ position: "fixed", left: 0, top: 0, fontSize: 30, pointerEvents: "none", zIndex: 15 }}>🦋</div>;
 }
 
@@ -297,10 +304,36 @@ export default function SucculentZen() {
   const [muted, setMuted] = useState(() => localStorage.getItem("szen_mute") === "1");
   const bgMusicRef = useRef(null);
   const musicStartedRef = useRef(false);
+  const lastMuteTouchRef = useRef(0);
 
 
   useEffect(() => {
-    AdMob.initialize({ initializeForTesting: false }).catch(() => {});
+    const initializeAds = async () => {
+      try {
+        await AdMob.initialize();
+        const consentInfo = await AdMob.requestConsentInfo();
+
+        if (Capacitor.getPlatform() === "ios") {
+          const trackingInfo = await AdMob.trackingAuthorizationStatus();
+          if (trackingInfo.status === "notDetermined") {
+            await AdMob.requestTrackingAuthorization();
+          }
+        }
+
+        if (
+          consentInfo.isConsentFormAvailable &&
+          consentInfo.status === AdmobConsentStatus.REQUIRED
+        ) {
+          await AdMob.showConsentForm();
+        }
+      } catch {
+        // Ads are optional; keep the game playable if consent or ad setup fails.
+      }
+    };
+
+    if (Capacitor.getPlatform() !== "web") {
+      initializeAds();
+    }
   }, []);
 
   useEffect(() => {
@@ -318,48 +351,98 @@ export default function SucculentZen() {
     else if (musicStartedRef.current) { audio.play().catch(() => {}); }
   }, [muted]);
 
+  const resumeMusic = useCallback(() => {
+    const audio = bgMusicRef.current;
+    if (!audio) return;
+    musicStartedRef.current = true;
+    audio.play().catch(() => {
+      musicStartedRef.current = false;
+    });
+  }, []);
+
   const startMusic = useCallback(() => {
     if (musicStartedRef.current || muted) return;
-    musicStartedRef.current = true;
-    bgMusicRef.current?.play().catch(() => {});
-  }, [muted]);
+    resumeMusic();
+  }, [muted, resumeMusic]);
 
   const handleMuteToggle = useCallback(() => {
-    const willUnmute = muted;
-    if (willUnmute && !musicStartedRef.current) {
-      musicStartedRef.current = true;
-      bgMusicRef.current?.play().catch(() => {});
-    }
     setMuted(m => {
       const next = !m;
       localStorage.setItem("szen_mute", next ? "1" : "0");
+      if (next) {
+        bgMusicRef.current?.pause();
+      } else {
+        resumeMusic();
+      }
       return next;
     });
-  }, [muted]);
+  }, [resumeMusic]);
+
+  const activateMuteToggle = useCallback((event) => {
+    event?.preventDefault?.();
+    event?.stopPropagation?.();
+    lastMuteTouchRef.current = Date.now();
+    handleMuteToggle();
+  }, [handleMuteToggle]);
+
+  const handleMuteClick = useCallback((event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (Date.now() - lastMuteTouchRef.current < 700) return;
+    handleMuteToggle();
+  }, [handleMuteToggle]);
 
   const showRewardedAd = useCallback(async (onRewarded) => {
     setAdLoading(true);
-    let listener = null;
+    const listeners = [];
+    let finished = false;
+
+    const cleanup = () => {
+      listeners.forEach((listener) => {
+        try {
+          listener?.remove?.();
+        } catch {
+          // Listener cleanup should not block reward resolution.
+        }
+      });
+    };
+
+    const finish = (rewarded) => {
+      if (finished) return;
+      finished = true;
+      cleanup();
+      if (rewarded) onRewarded();
+      setAdLoading(false);
+    };
+
     try {
+      listeners.push(await AdMob.addListener(
+        RewardAdPluginEvents.Rewarded,
+        () => finish(true)
+      ));
+      listeners.push(await AdMob.addListener(
+        RewardAdPluginEvents.FailedToLoad,
+        () => finish(false)
+      ));
+      listeners.push(await AdMob.addListener(
+        RewardAdPluginEvents.FailedToShow,
+        () => finish(false)
+      ));
+      listeners.push(await AdMob.addListener(
+        RewardAdPluginEvents.Dismissed,
+        () => finish(false)
+      ));
       await AdMob.prepareRewardVideoAd({
         adId: Capacitor.getPlatform() === "ios"
           ? "ca-app-pub-8922520661942995/6747947180"
           : "ca-app-pub-8922520661942995/9607107878",
-        isTesting: true,
       });
-      listener = await AdMob.addListener(
-        RewardAdPluginEvents.Rewarded,
-        () => { listener?.remove(); onRewarded(); setAdLoading(false); }
-      );
       await AdMob.showRewardVideoAd();
-    } catch (e) {
-      listener?.remove();
-      onRewarded();
-      setAdLoading(false);
+    } catch {
+      finish(false);
     }
   }, []);
   const level = LEVELS[Math.min(levelIndex, LEVELS.length - 1)];
-  const isDev = localStorage.getItem('devMode') === 'true';
 
   const startLevel = useCallback((idx) => {
     const lvl = LEVELS[Math.min(idx, LEVELS.length - 1)];
@@ -380,7 +463,7 @@ export default function SucculentZen() {
     setButterflies([]);
     setBloomedTiles(new Set());
     if (winTimerRef.current) { clearTimeout(winTimerRef.current); winTimerRef.current = null; }
-    Object.values(tileRefs.current).forEach(r => { if (r?.current) { gsap.killTweensOf(r.current); gsap.set(r.current, { clearProps: "all" }); } });
+    Object.values(tileRefs.current).forEach(el => { if (el) { gsap.killTweensOf(el); gsap.set(el, { clearProps: "all" }); } });
     if (gridRef.current) { gsap.killTweensOf(gridRef.current); gsap.set(gridRef.current, { clearProps: "all" }); }
     savedGrid.current = null;
     tileRefs.current = {};
@@ -398,7 +481,7 @@ export default function SucculentZen() {
     }
     const t = setTimeout(() => setShowTimer(s => s - 1), 1000);
     return () => clearTimeout(t);
-  }, [phase, showTimer]);
+  }, [level.pattern, phase, showTimer]);
 
   const triggerWinAnimation = useCallback(() => {
     sounds.win();
@@ -407,7 +490,7 @@ export default function SucculentZen() {
     lvl.pattern.forEach((row, r) => {
       row.forEach((cell, c) => {
         if (cell !== 0) {
-          const el = tileRefs.current[`${r}-${c}`]?.current;
+          const el = tileRefs.current[`${r}-${c}`];
           if (el) {
             const rect = el.getBoundingClientRect();
             positions.push({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
@@ -422,6 +505,7 @@ export default function SucculentZen() {
     }
     setFallingParticles(Array.from({ length: 22 }, (_, i) => ({
       id: i, x: Math.random() * window.innerWidth, delay: i * 0.08,
+      fontSize: 18 + Math.random() * 14,
       emoji: ["🍃","🌿","✨","⭐","🍃","🌿"][Math.floor(Math.random() * 6)],
     })));
     setButterflies([
@@ -430,7 +514,7 @@ export default function SucculentZen() {
       { id: 2, side: "left", delay: 0.9 },
       { id: 3, side: "right", delay: 1.1 },
     ]);
-    const tileEls = Object.values(tileRefs.current).map(r => r?.current).filter(Boolean);
+    const tileEls = Object.values(tileRefs.current).filter(Boolean);
     setTimeout(() => {
       gsap.to(tileEls, {
         rotation: 720, y: 200, scale: 0.3, opacity: 0,
@@ -438,6 +522,7 @@ export default function SucculentZen() {
         onComplete: () => setParticles(Array.from({ length: 18 }, (_, i) => ({
           id: i, x: Math.random() * window.innerWidth, y: window.innerHeight * 0.6,
           emoji: FLOWERS[Math.floor(Math.random() * FLOWERS.length)], delay: i * 0.06,
+          fontSize: 24 + Math.random() * 16,
         }))),
       });
     }, 400);
@@ -487,8 +572,8 @@ export default function SucculentZen() {
         sounds.select();
         setSelected([r, c]);
         const key = `${r}-${c}`;
-        if (tileRefs.current[key]?.current) {
-          gsap.fromTo(tileRefs.current[key].current,
+        if (tileRefs.current[key]) {
+          gsap.fromTo(tileRefs.current[key],
             { scale: 1 },
             { scale: 1.15, duration: 0.15, yoyo: true, repeat: 1, ease: "power2.out" }
           );
@@ -547,7 +632,17 @@ export default function SucculentZen() {
       {fallingParticles.map(p => <FallingParticle key={p.id} {...p} />)}
       {butterflies.map(b => <Butterfly key={b.id} {...b} />)}
 
-      <button onClick={(e) => { e.stopPropagation(); handleMuteToggle(); }} style={{position:"fixed",top:16,right:16,zIndex:100,background:"rgba(15,40,28,0.75)",border:"1px solid rgba(93,202,165,0.3)",borderRadius:"50%",width:40,height:40,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",fontSize:18,backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",outline:"none",color:"#fff",boxShadow:"0 2px 12px rgba(0,0,0,0.4)"}}>{muted ? "🔇" : "🔊"}</button>
+      <button
+        type="button"
+        aria-label={muted ? "Turn sound on" : "Turn sound off"}
+        onPointerDown={(e) => { e.stopPropagation(); }}
+        onTouchStart={(e) => { e.stopPropagation(); }}
+        onTouchEnd={activateMuteToggle}
+        onClick={handleMuteClick}
+        style={{position:"fixed",top:"max(64px, calc(env(safe-area-inset-top, 0px) + 12px))",right:"calc(env(safe-area-inset-right, 0px) + 12px)",zIndex:9999,background:"rgba(15,40,28,0.82)",border:"1px solid rgba(93,202,165,0.42)",borderRadius:"50%",width:52,height:52,padding:0,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",fontSize:20,lineHeight:1,backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",outline:"none",color:"#fff",boxShadow:"0 2px 14px rgba(0,0,0,0.42)",touchAction:"manipulation",WebkitUserSelect:"none",userSelect:"none",pointerEvents:"auto"}}
+      >
+        {muted ? "🔇" : "🔊"}
+      </button>
 
       <div style={{position:"absolute",width:200,height:200,borderRadius:"50%",background:"radial-gradient(circle,rgba(60,180,150,0.07),transparent)",top:-60,right:-40,pointerEvents:"none"}}/>
 
@@ -603,7 +698,6 @@ export default function SucculentZen() {
           <div style={{display:"grid",gridTemplateColumns:"repeat(5, minmax(0, 1fr))",gridTemplateRows:"repeat(5, minmax(0, 1fr))",gap:3,width:"100%",aspectRatio:"1",maxHeight:"100%"}}>
             {grid && grid.map((row, r) => row.map((cell, c) => {
               const key = `${r}-${c}`;
-              if (!tileRefs.current[key]) tileRefs.current[key] = { current: null };
               return (
                 <Tile
                   key={key}
@@ -612,7 +706,10 @@ export default function SucculentZen() {
                   isLastMoved={lastMoved === key}
                   onClick={() => handleTile(r, c)}
                   isBloom={cell === 4 && bloomedTiles.has(key)}
-                  tileRef={tileRefs.current[key]}
+                  setTileRef={(el) => {
+                    if (el) tileRefs.current[key] = el;
+                    else delete tileRefs.current[key];
+                  }}
                 />
               );
             }))}
