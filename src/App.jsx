@@ -124,6 +124,7 @@ const PHASES = { MENU: "menu", SHOW: "show", SOLVE: "solve", WIN: "win", LOSE: "
 function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef }) {
   const t = TILE_COLORS[type];
   const prevMoved = useRef(false);
+  const prevBloom = useRef(false);
   const tileRef = useRef(null);
 
   useEffect(() => {
@@ -140,6 +141,16 @@ function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef }) {
     }
     prevMoved.current = isLastMoved;
   }, [isLastMoved]);
+
+  useEffect(() => {
+    if (isBloom && !prevBloom.current && tileRef.current) {
+      gsap.fromTo(tileRef.current,
+        { scale: 1 },
+        { scale: 1.35, duration: 0.18, ease: "power2.out", yoyo: true, repeat: 1 }
+      );
+    }
+    prevBloom.current = isBloom;
+  }, [isBloom]);
 
   return (
     <div
