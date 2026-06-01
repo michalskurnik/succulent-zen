@@ -675,7 +675,7 @@ export default function SucculentZen() {
   };
 
   return (
-    <div className="game-outer" style={{height:"100dvh",width:"100vw",background:"linear-gradient(rgba(0,0,0,0.60),rgba(0,0,0,0.60)),url(/bg.png)",backgroundSize:"cover",backgroundPosition:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:phase===PHASES.MENU?"center":"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}} onPointerDown={startMusic}>
+    <div className="game-outer" style={{height:"100dvh",width:"100%",background:"linear-gradient(rgba(0,0,0,0.60),rgba(0,0,0,0.60)),url(/bg.png)",backgroundSize:"cover",backgroundPosition:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:phase===PHASES.MENU?"center":"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}} onPointerDown={startMusic}>
       {particles.map(p => <FlowerParticle key={p.id} {...p} />)}
       <WinCanvas visible={canvasVisible} positions={canvasPositions} />
       {fallingParticles.map(p => <FallingParticle key={p.id} {...p} />)}
