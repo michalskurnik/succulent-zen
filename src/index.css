@@ -4,12 +4,18 @@
   padding: 0;
 }
 
+html {
+  background: #0d1f1a;
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: sans-serif;
   background: #0d1f1a;
   overscroll-behavior: none;
   -webkit-tap-highlight-color: transparent;
+  min-height: 100%;
 }
 
 @keyframes arrowBlink {
@@ -47,19 +53,24 @@ body {
 /* ── Tablet / iPad ────────────────────────────────────── */
 @media (min-width: 768px) {
   #root {
-    max-width: 600px;
+    max-width: 720px;
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+  .game-outer {
+    width: 100% !important;
+    height: 100% !important;
   }
   .grid-wrapper {
     padding-bottom: 16px !important;
   }
   .action-bar {
-    max-width: 480px !important;
-    margin-bottom: 4px;
+    max-width: 520px !important;
   }
 }
 
 @media (min-width: 1024px) {
   #root {
-    max-width: 660px;
+    max-width: 800px;
   }
 }
