@@ -4,6 +4,10 @@
   padding: 0;
 }
 
+html {
+  background-color: #0a1f14;
+}
+
 html, body {
   background-color: #0a1f14;
   margin: 0;
@@ -53,7 +57,7 @@ body {
 /* ── Tablet / iPad ────────────────────────────────────── */
 @media (min-width: 768px) {
   #root {
-    max-width: 720px;
+    max-width: 100%;
     height: 100dvh;
     min-height: 100dvh;
   }
@@ -71,6 +75,6 @@ body {
 
 @media (min-width: 1024px) {
   #root {
-    max-width: 800px;
+    max-width: 100%;
   }
 }
