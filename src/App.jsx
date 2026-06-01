@@ -120,7 +120,7 @@ function gridMatches(a, b) {
   else console.log("[szen] All 10 levels validated OK.");
 }());
 
-const PHASES = { MENU: "menu", SHOW: "show", SOLVE: "solve", WIN: "win", LOSE: "lose" };
+const PHASES = { MENU: "menu", SHOW: "show", SOLVE: "solve", WIN: "win", LOSE: "lose", TRANSITION: "transition" };
 
 function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef, showGlow }) {
   const t = TILE_COLORS[type];
@@ -178,6 +178,36 @@ function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef, sho
           transition: "filter 0.15s ease",
         }}/>
       )}
+    </div>
+  );
+}
+
+function GridTransition({ onDone }) {
+  const [visible, setVisible] = useState(false);
+  const [expanding, setExpanding] = useState(false);
+  const [fading, setFading] = useState(false);
+  const onDoneRef = useRef(onDone);
+  useEffect(() => {
+    const t1 = setTimeout(() => setVisible(true), 50);
+    const t2 = setTimeout(() => setExpanding(true), 700);
+    const t3 = setTimeout(() => setFading(true), 2200);
+    const t4 = setTimeout(() => onDoneRef.current(), 2700);
+    return () => [t1, t2, t3, t4].forEach(clearTimeout);
+  }, []);
+  return (
+    <div style={{position:"fixed",inset:0,zIndex:18,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"linear-gradient(135deg,rgba(5,20,14,0.97),rgba(10,30,20,0.97))",opacity:fading?0:visible?1:0,transition:"opacity 0.5s ease",pointerEvents:"none"}}>
+      <div style={{color:"rgba(93,202,165,0.92)",fontSize:22,fontWeight:300,letterSpacing:"0.14em",marginBottom:40,textAlign:"center",textShadow:"0 0 24px rgba(93,202,165,0.5)"}}>
+        The garden grows...
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(5, 28px)",gridTemplateRows:"repeat(5, 28px)",gap:7,filter:expanding?"drop-shadow(0 0 16px rgba(93,202,165,0.75))":"drop-shadow(0 0 6px rgba(93,202,165,0.3))",transition:"filter 0.7s ease"}}>
+        {Array.from({length:25},(_,i)=>{
+          const r=Math.floor(i/5),c=i%5;
+          const isInner=r>=1&&r<=3&&c>=1&&c<=3;
+          const isCorner=(r===0||r===4)&&(c===0||c===4);
+          const delay=isInner?0:isCorner?0.18:0.08;
+          return <div key={i} style={{width:28,height:28,borderRadius:"50%",background:isInner?"rgba(93,202,165,0.82)":"rgba(93,202,165,0.52)",opacity:isInner?1:expanding?1:0,transform:isInner?"scale(1)":expanding?"scale(1)":"scale(0.1)",transition:isInner?"none":`opacity 0.45s ease ${delay}s,transform 0.45s ease ${delay}s`}}/>;
+        })}
+      </div>
     </div>
   );
 }
@@ -314,6 +344,7 @@ export default function SucculentZen() {
   const unlockedRef = useRef(null);
   const winTimerRef = useRef(null);
   const rareGlowTimerRef = useRef(null);
+  const transitionTargetRef = useRef(null);
   const levelPatternRef = useRef(null);
   const [muted, setMuted] = useState(() => localStorage.getItem("szen_mute") === "1");
   const bgMusicRef = useRef(null);
@@ -686,7 +717,9 @@ export default function SucculentZen() {
           </div>
         </div>
       )}
-      {phase !== PHASES.MENU && (
+      {phase === PHASES.TRANSITION && <GridTransition onDone={() => startLevel(transitionTargetRef.current)} />}
+
+      {phase !== PHASES.MENU && phase !== PHASES.TRANSITION && (
       <div style={{width:"100%",background:"rgba(15,40,28,0.55)",backdropFilter:"blur(24px)",WebkitBackdropFilter:"blur(24px)",borderRadius:28,border:"1px solid rgba(93,202,165,0.18)",boxShadow:"0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(93,202,165,0.12)",padding:"14px 14px 10px",position:"relative",zIndex:1,display:"flex",flexDirection:"column",flex:1,minHeight:0}}>
         <div style={{textAlign:"center",marginBottom:8}}>
           <div style={{fontSize:11,letterSpacing:"0.35em",color:"rgba(255,255,255,0.5)",textTransform:"uppercase",marginBottom:4}}>— succulent —</div>
@@ -800,7 +833,7 @@ export default function SucculentZen() {
             <div style={{fontSize:56,marginBottom:8}}>🌸</div>
             <div style={{fontSize:22,fontWeight:500,color:"#e8d5a0",marginBottom:8}}>WELL DONE!</div>
             <div style={{fontSize:24,color:"#d4a030",letterSpacing:6,marginBottom:20}}>{"★".repeat(stars)}{"☆".repeat(3-stars)}</div>
-            <button onClick={()=>{const next=levelIndex+1<LEVELS.length?levelIndex+1:0;localStorage.setItem("szen_level",next);setLevelIndex(next);startLevel(next);}} style={{width:"100%",padding:"12px",borderRadius:24,background:"linear-gradient(135deg,#5dbfa0,#2d8a6a)",border:"none",color:"#fff",fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:8}}>Next Level →</button>
+            <button onClick={()=>{const next=levelIndex+1<LEVELS.length?levelIndex+1:0;localStorage.setItem("szen_level",next);setLevelIndex(next);if(levelIndex===1){transitionTargetRef.current=next;setPhase(PHASES.TRANSITION);}else{startLevel(next);}}} style={{width:"100%",padding:"12px",borderRadius:24,background:"linear-gradient(135deg,#5dbfa0,#2d8a6a)",border:"none",color:"#fff",fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:8}}>Next Level →</button>
             <button onClick={()=>startLevel(levelIndex)} style={{width:"100%",padding:"10px",borderRadius:24,background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.12)",color:"rgba(255,255,255,0.7)",fontSize:13,cursor:"pointer"}}>Play Again</button>
           </div>
         </div>
