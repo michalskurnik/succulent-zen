@@ -12,6 +12,12 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+@keyframes arrowBlink {
+  0%, 100% { opacity: 1; transform: translateY(0); }
+  50% { opacity: 0.25; transform: translateY(5px); }
+}
+.blink-arrow { animation: arrowBlink 0.75s ease-in-out infinite; }
+
 @keyframes rarePulse {
   0%   { box-shadow: 0 0 6px 2px rgba(0,255,120,0.35); }
   14%  { box-shadow: 0 0 22px 8px rgba(0,255,120,0.8), 0 0 4px 2px rgba(0,255,120,0.4); }

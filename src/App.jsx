@@ -20,8 +20,8 @@ const TILE_COLORS = {
 };
 
 const LEVELS = [
-  { maxMoves: 20, pattern: [[0,1,0,1,0],[1,2,0,2,1],[0,0,3,0,0],[1,2,0,2,1],[0,1,0,1,0]] },
-  { maxMoves: 20, pattern: [[1,0,2,0,1],[0,1,0,1,0],[2,0,1,0,2],[0,1,0,1,0],[1,0,2,0,1]] },
+  { maxMoves: 20, showDuration: 5, pattern: [[0,1,0],[1,1,1],[0,1,0]] },
+  { maxMoves: 20, showDuration: 4, pattern: [[1,0,1],[0,2,0],[1,0,1]] },
   { maxMoves: 22, pattern: [[0,0,1,0,0],[0,1,2,1,0],[1,2,0,2,1],[0,1,2,1,0],[0,0,1,0,0]] },
   { maxMoves: 22, pattern: [[0,1,0,1,0],[1,0,2,0,1],[0,2,0,2,0],[1,0,2,0,1],[0,1,0,1,0]] },
   { maxMoves: 22, pattern: [[0,0,4,0,0],[0,3,1,3,0],[3,1,0,1,3],[0,3,1,3,0],[0,0,3,0,0]] },
@@ -79,23 +79,24 @@ function fisherYates(arr) {
 }
 
 function shuffle(pattern) {
+  const size = pattern.length;
   const colored = [];
   pattern.forEach(row => row.forEach(cell => { if (cell !== 0) colored.push(cell); }));
   const positions = [];
-  for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) positions.push([r, c]);
+  for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) positions.push([r, c]);
   let grid, attempts = 0;
   do {
     const pos = fisherYates(positions).slice(0, colored.length);
     const col = fisherYates(colored);
-    grid = Array.from({ length: 5 }, () => Array(5).fill(0));
+    grid = Array.from({ length: size }, () => Array(size).fill(0));
     pos.forEach(([r, c], k) => { grid[r][c] = col[k]; });
   } while (++attempts < 20 && gridMatches(grid, pattern));
   return grid;
 }
 
 function gridMatches(a, b) {
-  for (let r = 0; r < 5; r++)
-    for (let c = 0; c < 5; c++)
+  for (let r = 0; r < b.length; r++)
+    for (let c = 0; c < b[r].length; c++)
       if (a[r][c] !== b[r][c]) return false;
   return true;
 }
@@ -108,7 +109,7 @@ function gridMatches(a, b) {
     const empties = flat.filter(v => v === 0);
     const bad = flat.filter(v => ![0,1,2,3,4].includes(v));
     const n = idx + 1;
-    if (lvl.pattern.length !== 5 || lvl.pattern.some(row => row.length !== 5)) { issues.push("L"+n+": not 5x5"); return; }
+    if (!lvl.pattern.length || lvl.pattern.some(row => row.length !== lvl.pattern.length)) { issues.push("L"+n+": not square"); return; }
     if (bad.length) { issues.push("L"+n+": bad values"); return; }
     if (!tiles.length) { issues.push("L"+n+": no tiles"); return; }
     if (!empties.length) { issues.push("L"+n+": no empty cells"); return; }
@@ -463,7 +464,7 @@ export default function SucculentZen() {
     setMovesLeft(lvl.maxMoves);
     setPhase(PHASES.SHOW);
     setSelected(null);
-    setShowTimer(5);
+    setShowTimer(lvl.showDuration ?? 5);
     setLastMoved(null);
     setHistory([]);
     setShowsLeft(MAX_SHOWS);
@@ -705,14 +706,20 @@ export default function SucculentZen() {
           </div>
         </div>
 
-        <div style={{textAlign:"center",fontSize:12,color:"rgba(255,255,255,0.6)",marginBottom:12,minHeight:20}}>
-          {phase === PHASES.SHOW && `Remember the pattern... (${showTimer})`}
+        <div style={{textAlign:"center",fontSize:12,color:"rgba(255,255,255,0.6)",marginBottom:8,minHeight:20}}>
+          {phase === PHASES.SHOW && levelIndex === 0 && <span style={{color:"rgba(93,202,165,0.95)",fontWeight:600,fontSize:13}}>Watch the pattern carefully!</span>}
+          {phase === PHASES.SHOW && levelIndex !== 0 && `Remember the pattern... (${showTimer})`}
           {phase === PHASES.SOLVE && isShowingPattern && "👁 Showing pattern..."}
           {phase === PHASES.SOLVE && !isShowingPattern && (selected ? "Tap an empty tile to move" : "Tap a succulent to select")}
         </div>
+        {phase === PHASES.SHOW && (
+          <div style={{textAlign:"center",marginBottom:4}}>
+            <span className="blink-arrow" style={{fontSize:26,color:"rgba(93,202,165,0.85)",lineHeight:1}}>▼</span>
+          </div>
+        )}
 
         <div ref={gridRef} style={{background:"rgba(0,0,0,0.22)",borderRadius:16,width:"100%",alignSelf:"center",padding:10,paddingBottom:"100px",transition:"border 0.3s",border:"1px solid rgba(255,255,255,0.07)",flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(5, minmax(0, 1fr))",gridTemplateRows:"repeat(5, minmax(0, 1fr))",gap:3,width:"100%",aspectRatio:"1",maxHeight:"100%"}}>
+          <div style={{display:"grid",gridTemplateColumns:`repeat(${level.pattern.length}, minmax(0, 1fr))`,gridTemplateRows:`repeat(${level.pattern.length}, minmax(0, 1fr))`,gap:3,width:"100%",aspectRatio:"1",maxHeight:"100%"}}>
             {grid && grid.map((row, r) => row.map((cell, c) => {
               const key = `${r}-${c}`;
               return (
