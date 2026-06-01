@@ -121,12 +121,11 @@ function gridMatches(a, b) {
 
 const PHASES = { MENU: "menu", SHOW: "show", SOLVE: "solve", WIN: "win", LOSE: "lose" };
 
-function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef, glowSeed, rareGlowRef }) {
+function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef, showGlow }) {
   const t = TILE_COLORS[type];
   const prevMoved = useRef(false);
   const prevBloom = useRef(false);
   const tileRef = useRef(null);
-  const [showGlow, setShowGlow] = useState(false);
 
   useEffect(() => {
     setTileRef(tileRef.current);
@@ -152,13 +151,6 @@ function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef, glo
     }
     prevBloom.current = isBloom;
   }, [isBloom]);
-
-  useEffect(() => {
-    setShowGlow(false);
-    if (type !== 4 || rareGlowRef.current) return;
-    rareGlowRef.current = true;
-    setShowGlow(true);
-  }, [glowSeed]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div
@@ -316,11 +308,11 @@ export default function SucculentZen() {
   const [fallingParticles, setFallingParticles] = useState([]);
   const [butterflies, setButterflies] = useState([]);
   const [bloomedTiles, setBloomedTiles] = useState(() => new Set());
-  const [glowSeed, setGlowSeed] = useState(0);
+  const [rareGlowPosition, setRareGlowPosition] = useState(null);
   const levelCompleteRef = useRef(null);
   const unlockedRef = useRef(null);
   const winTimerRef = useRef(null);
-  const rareGlowRef = useRef(false);
+  const rareGlowTimerRef = useRef(null);
   const levelPatternRef = useRef(null);
   const [muted, setMuted] = useState(() => localStorage.getItem("szen_mute") === "1");
   const bgMusicRef = useRef(null);
@@ -483,8 +475,10 @@ export default function SucculentZen() {
     setFallingParticles([]);
     setButterflies([]);
     setBloomedTiles(new Set());
-    setGlowSeed(s => s + 1);
-    rareGlowRef.current = false;
+    clearTimeout(rareGlowTimerRef.current);
+    const rarePos = lvl.pattern.reduce((acc, row, r) => acc || row.reduce((a, cell, c) => a || (cell === 4 ? `${r}-${c}` : null), null), null);
+    setRareGlowPosition(rarePos);
+    if (rarePos) rareGlowTimerRef.current = setTimeout(() => setRareGlowPosition(null), 3500);
     if (winTimerRef.current) { clearTimeout(winTimerRef.current); winTimerRef.current = null; }
     Object.values(tileRefs.current).forEach(el => { if (el) { gsap.killTweensOf(el); gsap.set(el, { clearProps: "all" }); } });
     if (gridRef.current) { gsap.killTweensOf(gridRef.current); gsap.set(gridRef.current, { clearProps: "all" }); }
@@ -729,8 +723,7 @@ export default function SucculentZen() {
                   isLastMoved={lastMoved === key}
                   onClick={() => handleTile(r, c)}
                   isBloom={cell === 4 && bloomedTiles.has(key)}
-                  glowSeed={glowSeed}
-                  rareGlowRef={rareGlowRef}
+                  showGlow={key === rareGlowPosition && cell === 4}
                   setTileRef={(el) => {
                     if (el) tileRefs.current[key] = el;
                     else delete tileRefs.current[key];
