@@ -121,11 +121,12 @@ function gridMatches(a, b) {
 
 const PHASES = { MENU: "menu", SHOW: "show", SOLVE: "solve", WIN: "win", LOSE: "lose" };
 
-function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef }) {
+function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef, glowSeed, rareGlowRef }) {
   const t = TILE_COLORS[type];
   const prevMoved = useRef(false);
   const prevBloom = useRef(false);
   const tileRef = useRef(null);
+  const [showGlow, setShowGlow] = useState(false);
 
   useEffect(() => {
     setTileRef(tileRef.current);
@@ -152,11 +153,18 @@ function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef }) {
     prevBloom.current = isBloom;
   }, [isBloom]);
 
+  useEffect(() => {
+    setShowGlow(false);
+    if (type !== 4 || rareGlowRef.current) return;
+    rareGlowRef.current = true;
+    setShowGlow(true);
+  }, [glowSeed]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div
       ref={tileRef}
       onClick={onClick}
-      className={type === 4 ? "rare-tile" : undefined}
+      className={showGlow ? "rare-tile" : undefined}
       style={{
         width: "100%",
         aspectRatio: "1",
@@ -312,6 +320,7 @@ export default function SucculentZen() {
   const levelCompleteRef = useRef(null);
   const unlockedRef = useRef(null);
   const winTimerRef = useRef(null);
+  const rareGlowRef = useRef(false);
   const levelPatternRef = useRef(null);
   const [muted, setMuted] = useState(() => localStorage.getItem("szen_mute") === "1");
   const bgMusicRef = useRef(null);
@@ -475,6 +484,7 @@ export default function SucculentZen() {
     setButterflies([]);
     setBloomedTiles(new Set());
     setGlowSeed(s => s + 1);
+    rareGlowRef.current = false;
     if (winTimerRef.current) { clearTimeout(winTimerRef.current); winTimerRef.current = null; }
     Object.values(tileRefs.current).forEach(el => { if (el) { gsap.killTweensOf(el); gsap.set(el, { clearProps: "all" }); } });
     if (gridRef.current) { gsap.killTweensOf(gridRef.current); gsap.set(gridRef.current, { clearProps: "all" }); }
@@ -713,12 +723,14 @@ export default function SucculentZen() {
               const key = `${r}-${c}`;
               return (
                 <Tile
-                  key={`${glowSeed}-${key}`}
+                  key={key}
                   type={cell}
                   isSelected={!!(selected && selected[0]===r && selected[1]===c)}
                   isLastMoved={lastMoved === key}
                   onClick={() => handleTile(r, c)}
                   isBloom={cell === 4 && bloomedTiles.has(key)}
+                  glowSeed={glowSeed}
+                  rareGlowRef={rareGlowRef}
                   setTileRef={(el) => {
                     if (el) tileRefs.current[key] = el;
                     else delete tileRefs.current[key];
