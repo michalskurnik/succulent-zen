@@ -308,6 +308,7 @@ export default function SucculentZen() {
   const [fallingParticles, setFallingParticles] = useState([]);
   const [butterflies, setButterflies] = useState([]);
   const [bloomedTiles, setBloomedTiles] = useState(() => new Set());
+  const [glowSeed, setGlowSeed] = useState(0);
   const levelCompleteRef = useRef(null);
   const unlockedRef = useRef(null);
   const winTimerRef = useRef(null);
@@ -473,6 +474,7 @@ export default function SucculentZen() {
     setFallingParticles([]);
     setButterflies([]);
     setBloomedTiles(new Set());
+    setGlowSeed(s => s + 1);
     if (winTimerRef.current) { clearTimeout(winTimerRef.current); winTimerRef.current = null; }
     Object.values(tileRefs.current).forEach(el => { if (el) { gsap.killTweensOf(el); gsap.set(el, { clearProps: "all" }); } });
     if (gridRef.current) { gsap.killTweensOf(gridRef.current); gsap.set(gridRef.current, { clearProps: "all" }); }
@@ -711,7 +713,7 @@ export default function SucculentZen() {
               const key = `${r}-${c}`;
               return (
                 <Tile
-                  key={key}
+                  key={`${glowSeed}-${key}`}
                   type={cell}
                   isSelected={!!(selected && selected[0]===r && selected[1]===c)}
                   isLastMoved={lastMoved === key}
