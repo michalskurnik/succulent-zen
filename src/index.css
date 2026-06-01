@@ -38,3 +38,28 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+/* ── Safe area (iPad home indicator) ─────────────────── */
+.game-outer {
+  padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+}
+
+/* ── Tablet / iPad ────────────────────────────────────── */
+@media (min-width: 768px) {
+  #root {
+    max-width: 600px;
+  }
+  .grid-wrapper {
+    padding-bottom: 16px !important;
+  }
+  .action-bar {
+    max-width: 480px !important;
+    margin-bottom: 4px;
+  }
+}
+
+@media (min-width: 1024px) {
+  #root {
+    max-width: 660px;
+  }
+}

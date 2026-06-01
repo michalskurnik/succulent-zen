@@ -675,7 +675,7 @@ export default function SucculentZen() {
   };
 
   return (
-    <div style={{height:"100dvh",width:"100vw",background:"linear-gradient(rgba(0,0,0,0.60),rgba(0,0,0,0.60)),url(/bg.png)",backgroundSize:"cover",backgroundPosition:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:phase===PHASES.MENU?"center":"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}} onPointerDown={startMusic}>
+    <div className="game-outer" style={{height:"100dvh",width:"100vw",background:"linear-gradient(rgba(0,0,0,0.60),rgba(0,0,0,0.60)),url(/bg.png)",backgroundSize:"cover",backgroundPosition:"center",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:phase===PHASES.MENU?"center":"space-between",padding:"12px",fontFamily:"sans-serif",color:"#fff",position:"relative",overflow:"hidden"}} onPointerDown={startMusic}>
       {particles.map(p => <FlowerParticle key={p.id} {...p} />)}
       <WinCanvas visible={canvasVisible} positions={canvasPositions} />
       {fallingParticles.map(p => <FallingParticle key={p.id} {...p} />)}
@@ -751,7 +751,7 @@ export default function SucculentZen() {
           </div>
         )}
 
-        <div ref={gridRef} style={{background:"rgba(0,0,0,0.22)",borderRadius:16,width:"100%",alignSelf:"center",padding:10,paddingBottom:"100px",transition:"border 0.3s",border:"1px solid rgba(255,255,255,0.07)",flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+        <div ref={gridRef} className="grid-wrapper" style={{background:"rgba(0,0,0,0.22)",borderRadius:16,width:"100%",alignSelf:"center",padding:10,paddingBottom:"100px",transition:"border 0.3s",border:"1px solid rgba(255,255,255,0.07)",flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
           <div style={{display:"grid",gridTemplateColumns:`repeat(${level.pattern.length}, minmax(0, 1fr))`,gridTemplateRows:`repeat(${level.pattern.length}, minmax(0, 1fr))`,gap:3,width:"100%",aspectRatio:"1",maxHeight:"100%"}}>
             {grid && grid.map((row, r) => row.map((cell, c) => {
               const key = `${r}-${c}`;
@@ -777,7 +777,7 @@ export default function SucculentZen() {
       )}
 
       {phase === PHASES.SOLVE && (
-        <div style={{display:"flex",gap:20,alignItems:"center",justifyContent:"center",width:"100%",maxWidth:360,background:"rgba(15,40,28,0.8)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderRadius:40,border:"1px solid rgba(255,255,255,0.08)",boxShadow:"0 0 30px rgba(93,202,165,0.08), inset 0 1px 0 rgba(255,255,255,0.05)",padding:"14px 28px"}}>
+        <div className="action-bar" style={{display:"flex",gap:20,alignItems:"center",justifyContent:"center",width:"100%",maxWidth:360,background:"rgba(15,40,28,0.8)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderRadius:40,border:"1px solid rgba(255,255,255,0.08)",boxShadow:"0 0 30px rgba(93,202,165,0.08), inset 0 1px 0 rgba(255,255,255,0.05)",padding:"14px 28px"}}>
           <div onClick={handleUndo} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,cursor:history.length===0?"not-allowed":"pointer",opacity:history.length===0?0.25:1,transition:"opacity 0.2s"}}>
             <div style={{width:56,height:56,borderRadius:"50%",background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.12)",boxShadow:"0 0 12px rgba(255,255,255,0.04)",display:"flex",alignItems:"center",justifyContent:"center"}}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
