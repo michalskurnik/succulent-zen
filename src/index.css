@@ -57,32 +57,31 @@ body {
 
 /* ── Tablet / iPad ────────────────────────────────────── */
 @media (min-width: 768px) {
-  html {
-    height: 100%;
-    overflow: hidden;
+  :root {
+    /* scale = 1.0 at ~570px, 1.4 at ~800px, capped at 1.4 */
+    --game-scale: clamp(1, calc(100vw / 570px), 1.4);
   }
-  body {
-    height: 100%;
-    overflow: hidden;
-  }
+  html { height: 100%; overflow: hidden; }
+  body { height: 100%; overflow: hidden; }
   #root {
     max-width: 100%;
     height: 100dvh;
     min-height: 100dvh;
     overflow: hidden;
+    align-items: center;
   }
   .game-outer {
-    width: 100% !important;
-    height: 100% !important;
-  }
-  .game-panel {
-    width: 500px !important;
-    max-width: 500px !important;
+    /* Fixed base width — scale handles visual size */
+    width: 390px !important;
+    /* Shrink layout height so scaled result fills exactly 100dvh */
+    height: calc(100dvh / var(--game-scale)) !important;
+    transform: scale(var(--game-scale));
+    transform-origin: top center;
   }
   .grid-wrapper {
     padding-bottom: 16px !important;
   }
   .action-bar {
-    max-width: 500px !important;
+    max-width: 360px !important;
   }
 }
