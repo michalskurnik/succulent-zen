@@ -752,7 +752,7 @@ export default function SucculentZen() {
         )}
 
         <div ref={gridRef} className="grid-wrapper" style={{background:"rgba(0,0,0,0.22)",borderRadius:16,width:"100%",alignSelf:"center",padding:10,paddingBottom:"100px",transition:"border 0.3s",border:"1px solid rgba(255,255,255,0.07)",flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <div style={{display:"grid",gridTemplateColumns:`repeat(${level.pattern.length}, minmax(0, 1fr))`,gridTemplateRows:`repeat(${level.pattern.length}, minmax(0, 1fr))`,gap:3,width:"100%",aspectRatio:"1",maxHeight:"100%"}}>
+          <div style={{display:"grid",gridTemplateColumns:`repeat(${level.pattern.length}, 1fr)`,gap:8,width:"100%"}}>
             {grid && grid.map((row, r) => row.map((cell, c) => {
               const key = `${r}-${c}`;
               return (
