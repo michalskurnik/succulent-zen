@@ -355,16 +355,20 @@ export default function SucculentZen() {
   useEffect(() => {
     const initializeAds = async () => {
       try {
-        await AdMob.initialize();
-        const consentInfo = await AdMob.requestConsentInfo();
-
+        // iOS: request ATT *before* initializing AdMob (Google requirement).
+        // AppDelegate triggers the native popup at ~1 s; if it is still pending
+        // when this runs, iOS queues this call and it waits for the same popup.
         if (Capacitor.getPlatform() === "ios") {
-          const trackingInfo = await AdMob.trackingAuthorizationStatus();
-          if (trackingInfo.status === "notDetermined") {
+          const { status } = await AdMob.trackingAuthorizationStatus();
+          if (status === "notDetermined") {
             await AdMob.requestTrackingAuthorization();
           }
         }
 
+        // Initialize AdMob inside the ATT completion (after user responds).
+        await AdMob.initialize();
+
+        const consentInfo = await AdMob.requestConsentInfo();
         if (
           consentInfo.isConsentFormAvailable &&
           consentInfo.status === AdmobConsentStatus.REQUIRED
@@ -377,7 +381,9 @@ export default function SucculentZen() {
     };
 
     if (Capacitor.getPlatform() !== "web") {
-      initializeAds();
+      // Small delay so the app UI is visible before the ATT popup appears.
+      const t = setTimeout(initializeAds, 1000);
+      return () => clearTimeout(t);
     }
   }, []);
 
