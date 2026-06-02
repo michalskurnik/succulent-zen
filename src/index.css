@@ -57,10 +57,19 @@ body {
 
 /* ── Tablet / iPad ────────────────────────────────────── */
 @media (min-width: 768px) {
+  html {
+    height: 100%;
+    overflow: hidden;
+  }
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
   #root {
-    max-width: 100%;
+    max-width: 520px;
     height: 100dvh;
     min-height: 100dvh;
+    overflow: hidden;
   }
   .game-outer {
     width: 100% !important;
@@ -71,11 +80,5 @@ body {
   }
   .action-bar {
     max-width: 520px !important;
-  }
-}
-
-@media (min-width: 1024px) {
-  #root {
-    max-width: 100%;
   }
 }
