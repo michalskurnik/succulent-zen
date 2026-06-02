@@ -343,6 +343,8 @@ export default function SucculentZen() {
   const levelCompleteRef = useRef(null);
   const unlockedRef = useRef(null);
   const winTimerRef = useRef(null);
+  const winAnimTimerRef = useRef(null);
+  const tileAnimTimerRef = useRef(null);
   const rareGlowTimerRef = useRef(null);
   const transitionTargetRef = useRef(null);
   const levelPatternRef = useRef(null);
@@ -497,6 +499,7 @@ export default function SucculentZen() {
 
   const startLevel = useCallback((idx) => {
     const lvl = LEVELS[Math.min(idx, LEVELS.length - 1)];
+    console.log(`[szen] startLevel(${idx}) pattern:`, lvl.pattern.map(r=>r.join('')).join('|'));
     setGrid(lvl.pattern.map(r => [...r]));
     setMovesLeft(lvl.maxMoves);
     setPhase(PHASES.SHOW);
@@ -518,6 +521,8 @@ export default function SucculentZen() {
     setRareGlowPosition(rarePos);
     if (rarePos) rareGlowTimerRef.current = setTimeout(() => setRareGlowPosition(null), 3500);
     if (winTimerRef.current) { clearTimeout(winTimerRef.current); winTimerRef.current = null; }
+    if (winAnimTimerRef.current) { clearTimeout(winAnimTimerRef.current); winAnimTimerRef.current = null; }
+    if (tileAnimTimerRef.current) { clearTimeout(tileAnimTimerRef.current); tileAnimTimerRef.current = null; }
     Object.values(tileRefs.current).forEach(el => { if (el) { gsap.killTweensOf(el); gsap.set(el, { clearProps: "all" }); } });
     if (gridRef.current) { gsap.killTweensOf(gridRef.current); gsap.set(gridRef.current, { clearProps: "all" }); }
     savedGrid.current = null;
@@ -530,7 +535,9 @@ export default function SucculentZen() {
   useEffect(() => {
     if (phase !== PHASES.SHOW) return;
     if (showTimer <= 0) {
-      setGrid(shuffle(levelPatternRef.current));
+      const shuffled = shuffle(levelPatternRef.current);
+      console.log(`[szen] SHOW→SOLVE shuffle:`, shuffled.map(r=>r.join('')).join('|'));
+      setGrid(shuffled);
       setPhase(PHASES.SOLVE);
       return;
     }
@@ -570,7 +577,8 @@ export default function SucculentZen() {
       { id: 3, side: "right", delay: 1.1 },
     ]);
     const tileEls = Object.values(tileRefs.current).filter(Boolean);
-    setTimeout(() => {
+    tileAnimTimerRef.current = setTimeout(() => {
+      tileAnimTimerRef.current = null;
       gsap.to(tileEls, {
         rotation: 720, y: 200, scale: 0.3, opacity: 0,
         duration: 0.9, stagger: 0.04, ease: "power2.in",
@@ -644,6 +652,7 @@ export default function SucculentZen() {
       newGrid[r][c] = newGrid[sr][sc];
       newGrid[sr][sc] = 0;
       const newMoves = movesLeft - 1;
+      console.log(`[szen] move (${sr},${sc})→(${r},${c}) type=${newGrid[r][c]} movesLeft=${newMoves} grid:`, newGrid.map(row=>row.join('')).join('|'));
       setGrid(newGrid);
       setMovesLeft(newMoves);
       setSelected(null);
@@ -652,10 +661,11 @@ export default function SucculentZen() {
         setBloomedTiles(prev => new Set([...prev, `${r}-${c}`]));
       }
       if (gridMatches(newGrid, level.pattern)) {
+        console.log(`[szen] WIN — grid matches pattern`);
         const s = newMoves > 10 ? 3 : newMoves > 5 ? 2 : 1;
         setStars(s);
         setPhase(PHASES.WIN);
-        setTimeout(triggerWinAnimation, 200);
+        winAnimTimerRef.current = setTimeout(triggerWinAnimation, 200);
       } else if (newMoves <= 0) {
         if (gridRef.current) {
           gsap.to(gridRef.current, {
