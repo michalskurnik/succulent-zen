@@ -20,16 +20,36 @@ const TILE_COLORS = {
 };
 
 const LEVELS = [
-  { maxMoves: 20, showDuration: 5, pattern: [[0,1,0],[1,1,1],[0,1,0]] },
-  { maxMoves: 20, showDuration: 4, pattern: [[1,0,1],[0,2,0],[1,0,1]] },
-  { maxMoves: 22, pattern: [[0,0,1,0,0],[0,1,2,1,0],[1,2,0,2,1],[0,1,2,1,0],[0,0,1,0,0]] },
-  { maxMoves: 22, pattern: [[0,1,0,1,0],[1,0,2,0,1],[0,2,0,2,0],[1,0,2,0,1],[0,1,0,1,0]] },
-  { maxMoves: 22, pattern: [[0,0,4,0,0],[0,3,1,3,0],[3,1,0,1,3],[0,3,1,3,0],[0,0,3,0,0]] },
-  { maxMoves: 24, pattern: [[4,0,0,0,1],[0,2,0,2,0],[0,0,3,0,0],[0,2,0,2,0],[1,0,0,0,1]] },
-  { maxMoves: 24, pattern: [[0,1,2,1,0],[1,0,4,0,1],[2,3,0,3,2],[1,0,3,0,1],[0,1,2,1,0]] },
-  { maxMoves: 25, pattern: [[4,0,1,0,2],[0,2,0,2,0],[1,0,3,0,1],[0,2,0,2,0],[2,0,1,0,2]] },
-  { maxMoves: 25, pattern: [[4,2,0,2,1],[2,0,2,0,2],[0,2,3,2,0],[2,0,2,0,2],[1,2,0,2,1]] },
-  { maxMoves: 28, pattern: [[0,1,4,1,0],[1,2,3,2,1],[2,3,0,3,2],[1,2,3,2,1],[0,1,4,1,0]] },
+  {id:1,rows:3,cols:3,maxMoves:18,showDuration:5,pattern:[[0,1,0],[1,1,1],[0,1,0]]},
+  {id:2,rows:3,cols:3,maxMoves:18,showDuration:4,pattern:[[1,0,1],[0,2,0],[1,0,1]]},
+  {id:3,rows:4,cols:4,maxMoves:20,showDuration:5,pattern:[[0,1,0,1],[1,0,2,0],[0,2,0,1],[1,0,1,0]]},
+  {id:4,rows:4,cols:4,maxMoves:22,showDuration:5,pattern:[[1,0,2,0],[0,2,0,3],[2,0,3,0],[0,3,0,1]]},
+  {id:5,rows:4,cols:4,maxMoves:22,showDuration:5,pattern:[[0,1,2,0],[1,2,0,3],[2,0,3,1],[0,3,1,0]]},
+  {id:6,rows:4,cols:4,maxMoves:24,showDuration:5,pattern:[[1,2,0,1],[2,0,3,2],[0,3,2,0],[1,2,0,3]]},
+  {id:7,rows:4,cols:4,maxMoves:24,showDuration:5,pattern:[[1,0,2,1],[0,3,1,0],[2,1,0,3],[1,0,3,2]]},
+  {id:8,rows:4,cols:4,maxMoves:26,showDuration:5,pattern:[[0,1,2,0],[1,4,0,2],[0,2,1,0],[2,0,1,3]]},
+  {id:9,rows:4,cols:5,maxMoves:28,showDuration:5,pattern:[[0,1,2,1,0],[1,4,0,2,1],[0,2,1,3,0],[2,0,3,1,2]]},
+  {id:10,rows:5,cols:5,maxMoves:28,showDuration:5,pattern:[[0,1,4,1,0],[1,2,3,2,1],[2,3,0,3,2],[1,2,3,2,1],[0,1,4,1,0]]},
+  {id:11,rows:5,cols:5,maxMoves:28,showDuration:5,pattern:[[1,2,3,2,1],[2,0,1,0,2],[3,1,4,1,3],[2,0,1,0,2],[1,2,3,2,1]]},
+  {id:12,rows:5,cols:5,maxMoves:28,showDuration:5,pattern:[[0,1,2,1,0],[1,3,0,3,1],[2,0,4,0,2],[1,3,0,3,1],[0,1,2,1,0]]},
+  {id:13,rows:5,cols:5,maxMoves:29,showDuration:5,pattern:[[1,0,2,0,1],[0,3,1,3,0],[2,1,4,1,2],[0,3,1,3,0],[1,0,2,0,1]]},
+  {id:14,rows:5,cols:5,maxMoves:29,showDuration:5,pattern:[[1,2,0,3,1],[2,0,3,1,2],[0,3,4,2,0],[3,1,2,0,3],[1,2,0,3,1]]},
+  {id:15,rows:5,cols:5,maxMoves:30,showDuration:5,pattern:[[0,1,2,1,0],[1,2,3,2,1],[2,3,4,3,2],[1,2,0,2,1],[0,1,2,1,0]]},
+  {id:16,rows:5,cols:5,maxMoves:30,showDuration:5,pattern:[[2,3,1,3,2],[3,0,0,0,3],[1,0,4,0,1],[3,0,0,0,3],[2,3,1,3,2]]},
+  {id:17,rows:5,cols:5,maxMoves:31,showDuration:5,pattern:[[0,2,1,2,0],[2,3,2,3,2],[1,2,4,2,1],[2,3,2,3,2],[0,2,1,2,0]]},
+  {id:18,rows:5,cols:5,maxMoves:32,showDuration:5,pattern:[[3,1,0,1,3],[1,2,3,2,1],[0,3,4,3,0],[1,2,3,2,1],[3,1,0,1,3]]},
+  {id:19,rows:5,cols:5,maxMoves:32,showDuration:5,pattern:[[1,3,2,3,1],[3,0,1,0,3],[2,1,4,1,2],[3,0,1,0,3],[1,3,2,3,1]]},
+  {id:20,rows:5,cols:5,maxMoves:33,showDuration:5,pattern:[[2,1,3,1,2],[1,3,2,3,1],[3,2,4,2,3],[1,3,0,3,1],[2,1,3,1,2]]},
+  {id:21,rows:5,cols:5,maxMoves:33,showDuration:5,pattern:[[0,1,1,1,0],[1,2,2,2,1],[1,2,4,2,1],[1,2,2,2,1],[0,1,1,1,0]]},
+  {id:22,rows:5,cols:5,maxMoves:34,showDuration:5,pattern:[[2,1,0,1,2],[1,3,2,3,1],[0,2,4,2,0],[1,3,2,3,1],[2,1,0,1,2]]},
+  {id:23,rows:5,cols:5,maxMoves:35,showDuration:5,pattern:[[3,2,1,2,3],[2,0,2,0,2],[1,2,4,2,1],[2,0,2,0,2],[3,2,1,2,3]]},
+  {id:24,rows:5,cols:5,maxMoves:35,showDuration:5,pattern:[[1,3,2,3,1],[3,2,3,2,3],[2,3,4,3,2],[3,2,3,2,3],[1,3,2,3,1]]},
+  {id:25,rows:5,cols:5,maxMoves:36,showDuration:5,pattern:[[0,2,1,2,0],[2,1,3,1,2],[1,3,4,3,1],[2,1,3,1,2],[0,2,1,2,0]]},
+  {id:26,rows:5,cols:5,maxMoves:36,showDuration:5,pattern:[[3,1,2,1,3],[1,2,3,2,1],[2,3,4,3,2],[1,2,3,2,1],[3,1,2,1,3]]},
+  {id:27,rows:5,cols:5,maxMoves:37,showDuration:5,pattern:[[1,2,3,2,1],[2,3,2,3,2],[3,2,4,2,3],[2,3,0,3,2],[1,2,3,2,1]]},
+  {id:28,rows:5,cols:5,maxMoves:37,showDuration:5,pattern:[[2,1,3,1,2],[1,3,2,3,1],[3,2,4,2,3],[1,3,2,3,1],[2,1,3,1,2]]},
+  {id:29,rows:5,cols:5,maxMoves:38,showDuration:5,pattern:[[3,2,1,2,3],[2,1,3,1,2],[1,3,4,3,1],[2,1,3,1,2],[3,2,0,2,3]]},
+  {id:30,rows:5,cols:5,maxMoves:40,showDuration:5,pattern:[[1,2,3,2,1],[2,3,1,3,2],[3,1,4,1,3],[2,3,1,3,2],[1,2,3,2,1]]},
 ];
 
 const MAX_SHOWS = 3;
@@ -79,16 +99,17 @@ function fisherYates(arr) {
 }
 
 function shuffle(pattern) {
-  const size = pattern.length;
+  const rows = pattern.length;
+  const cols = pattern[0].length;
   const colored = [];
   pattern.forEach(row => row.forEach(cell => { if (cell !== 0) colored.push(cell); }));
   const positions = [];
-  for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) positions.push([r, c]);
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) positions.push([r, c]);
   let grid, attempts = 0;
   do {
     const pos = fisherYates(positions).slice(0, colored.length);
     const col = fisherYates(colored);
-    grid = Array.from({ length: size }, () => Array(size).fill(0));
+    grid = Array.from({ length: rows }, () => Array(cols).fill(0));
     pos.forEach(([r, c], k) => { grid[r][c] = col[k]; });
   } while (++attempts < 20 && gridMatches(grid, pattern));
   return grid;
@@ -109,7 +130,7 @@ function gridMatches(a, b) {
     const empties = flat.filter(v => v === 0);
     const bad = flat.filter(v => ![0,1,2,3,4].includes(v));
     const n = idx + 1;
-    if (!lvl.pattern.length || lvl.pattern.some(row => row.length !== lvl.pattern.length)) { issues.push("L"+n+": not square"); return; }
+    if (!lvl.pattern.length || lvl.pattern.some(row => row.length !== lvl.pattern[0].length)) { issues.push("L"+n+": inconsistent row widths"); return; }
     if (bad.length) { issues.push("L"+n+": bad values"); return; }
     if (!tiles.length) { issues.push("L"+n+": no tiles"); return; }
     if (!empties.length) { issues.push("L"+n+": no empty cells"); return; }
@@ -117,12 +138,12 @@ function gridMatches(a, b) {
     console.log("[szen] Level "+n+": OK — "+tiles.length+" tiles, "+empties.length+" empty, maxMoves="+lvl.maxMoves);
   });
   if (issues.length) console.error("[szen] BROKEN levels:", issues);
-  else console.log("[szen] All 10 levels validated OK.");
+  else console.log("[szen] All "+LEVELS.length+" levels validated OK.");
 }());
 
 const PHASES = { MENU: "menu", SHOW: "show", SOLVE: "solve", WIN: "win", LOSE: "lose", TRANSITION: "transition" };
 
-function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef, showGlow }) {
+function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef, showGlow, levelId }) {
   const t = TILE_COLORS[type];
   const prevMoved = useRef(false);
   const prevBloom = useRef(false);
@@ -158,6 +179,7 @@ function Tile({ type, isSelected, isLastMoved, isBloom, onClick, setTileRef, sho
       ref={tileRef}
       onClick={onClick}
       className={showGlow ? "rare-tile" : undefined}
+      data-level-id={levelId}
       style={{
         width: "100%",
         aspectRatio: "1",
@@ -345,6 +367,8 @@ export default function SucculentZen() {
   const winTimerRef = useRef(null);
   const winAnimTimerRef = useRef(null);
   const tileAnimTimerRef = useRef(null);
+  const tileGsapRef = useRef(null);
+  const levelIdRef = useRef(0);
   const rareGlowTimerRef = useRef(null);
   const transitionTargetRef = useRef(null);
   const levelPatternRef = useRef(null);
@@ -499,7 +523,9 @@ export default function SucculentZen() {
 
   const startLevel = useCallback((idx) => {
     const lvl = LEVELS[Math.min(idx, LEVELS.length - 1)];
-    console.log(`[szen] startLevel(${idx}) pattern:`, lvl.pattern.map(r=>r.join('')).join('|'));
+    levelIdRef.current += 1;
+    console.log(`[szen] startLevel(${idx}) levelId=${levelIdRef.current} pattern:`, lvl.pattern.map(r=>r.join('')).join('|'));
+    if (tileGsapRef.current) { tileGsapRef.current.kill(); tileGsapRef.current = null; }
     setGrid(lvl.pattern.map(r => [...r]));
     setMovesLeft(lvl.maxMoves);
     setPhase(PHASES.SHOW);
@@ -576,17 +602,24 @@ export default function SucculentZen() {
       { id: 2, side: "left", delay: 0.9 },
       { id: 3, side: "right", delay: 1.1 },
     ]);
+    const capturedLevelId = levelIdRef.current;
     const tileEls = Object.values(tileRefs.current).filter(Boolean);
     tileAnimTimerRef.current = setTimeout(() => {
       tileAnimTimerRef.current = null;
-      gsap.to(tileEls, {
+      const stillValid = tileEls.filter(el => el && String(el.dataset.levelId) === String(capturedLevelId));
+      if (!stillValid.length) return;
+      tileGsapRef.current = gsap.to(stillValid, {
         rotation: 720, y: 200, scale: 0.3, opacity: 0,
         duration: 0.9, stagger: 0.04, ease: "power2.in",
-        onComplete: () => setParticles(Array.from({ length: 18 }, (_, i) => ({
-          id: i, x: Math.random() * window.innerWidth, y: window.innerHeight * 0.6,
-          emoji: FLOWERS[Math.floor(Math.random() * FLOWERS.length)], delay: i * 0.06,
-          fontSize: 24 + Math.random() * 16,
-        }))),
+        onComplete: () => {
+          tileGsapRef.current = null;
+          if (levelIdRef.current !== capturedLevelId) return;
+          setParticles(Array.from({ length: 18 }, (_, i) => ({
+            id: i, x: Math.random() * window.innerWidth, y: window.innerHeight * 0.6,
+            emoji: FLOWERS[Math.floor(Math.random() * FLOWERS.length)], delay: i * 0.06,
+            fontSize: 24 + Math.random() * 16,
+          })));
+        },
       });
     }, 400);
     winTimerRef.current = setTimeout(() => setWinVisible(true), 1400);
@@ -767,22 +800,23 @@ export default function SucculentZen() {
           </div>
         )}
 
-        <div ref={gridRef} className="grid-wrapper" style={{background:"rgba(0,0,0,0.22)",borderRadius:16,width:"100%",alignSelf:"center",padding:10,paddingBottom:"100px",transition:"border 0.3s",border:"1px solid rgba(255,255,255,0.07)",flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <div style={{display:"grid",gridTemplateColumns:`repeat(${level.pattern.length}, 1fr)`,gap:8,width:"100%"}}>
+        <div ref={gridRef} className="grid-wrapper" style={{background:"rgba(0,0,0,0.22)",borderRadius:16,width:"100%",alignSelf:"center",padding:10,transition:"border 0.3s",border:"1px solid rgba(255,255,255,0.07)",flex:1,minHeight:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <div key={`grid-${levelIndex}`} style={{display:"grid",gridTemplateColumns:`repeat(${level.pattern[0].length}, 1fr)`,gap:8,width:"100%"}}>
             {grid && grid.map((row, r) => row.map((cell, c) => {
-              const key = `${r}-${c}`;
+              const posKey = `${r}-${c}`;
               return (
                 <Tile
-                  key={key}
+                  key={`tile-${levelIndex}-${r}-${c}`}
                   type={cell}
                   isSelected={!!(selected && selected[0]===r && selected[1]===c)}
-                  isLastMoved={lastMoved === key}
+                  isLastMoved={posKey === lastMoved}
                   onClick={() => handleTile(r, c)}
-                  isBloom={cell === 4 && bloomedTiles.has(key)}
-                  showGlow={key === rareGlowPosition && cell === 4}
+                  isBloom={cell === 4 && bloomedTiles.has(posKey)}
+                  showGlow={posKey === rareGlowPosition && cell === 4}
+                  levelId={levelIdRef.current}
                   setTileRef={(el) => {
-                    if (el) tileRefs.current[key] = el;
-                    else delete tileRefs.current[key];
+                    if (el) tileRefs.current[posKey] = el;
+                    else delete tileRefs.current[posKey];
                   }}
                 />
               );
