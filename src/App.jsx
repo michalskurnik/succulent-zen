@@ -20,14 +20,14 @@ const TILE_COLORS = {
 };
 
 const LEVELS = [
-  {id:1,rows:3,cols:3,maxMoves:18,showDuration:5,pattern:[[0,1,0],[1,1,1],[0,1,0]]},
-  {id:2,rows:3,cols:3,maxMoves:18,showDuration:4,pattern:[[1,0,1],[0,2,0],[1,0,1]]},
-  {id:3,rows:4,cols:4,maxMoves:20,showDuration:5,pattern:[[0,1,0,1],[1,0,2,0],[0,2,0,1],[1,0,1,0]]},
-  {id:4,rows:4,cols:4,maxMoves:22,showDuration:5,pattern:[[1,0,2,0],[0,2,0,3],[2,0,3,0],[0,3,0,1]]},
-  {id:5,rows:4,cols:4,maxMoves:22,showDuration:5,pattern:[[0,1,2,0],[1,2,0,3],[2,0,3,1],[0,3,1,0]]},
-  {id:6,rows:4,cols:4,maxMoves:24,showDuration:5,pattern:[[1,2,0,1],[2,0,3,2],[0,3,2,0],[1,2,0,3]]},
-  {id:7,rows:4,cols:4,maxMoves:24,showDuration:5,pattern:[[1,0,2,1],[0,3,1,0],[2,1,0,3],[1,0,3,2]]},
-  {id:8,rows:4,cols:4,maxMoves:26,showDuration:5,pattern:[[0,1,2,0],[1,4,0,2],[0,2,1,0],[2,0,1,3]]},
+  {id:1,rows:3,cols:3,maxMoves:16,showDuration:7,pattern:[[0,1,0],[1,1,1],[0,1,0]]},
+  {id:2,rows:3,cols:3,maxMoves:16,showDuration:7,pattern:[[1,0,1],[0,2,0],[1,0,1]]},
+  {id:3,rows:4,cols:4,maxMoves:18,showDuration:6,pattern:[[0,1,0,1],[1,0,2,0],[0,2,0,1],[1,0,1,0]]},
+  {id:4,rows:4,cols:4,maxMoves:18,showDuration:6,pattern:[[1,0,2,0],[0,2,0,3],[2,0,3,0],[0,3,0,1]]},
+  {id:5,rows:4,cols:4,maxMoves:18,showDuration:6,pattern:[[0,1,2,0],[1,2,0,3],[2,0,3,1],[0,3,1,0]]},
+  {id:6,rows:4,cols:4,maxMoves:18,showDuration:6,pattern:[[1,2,0,1],[2,0,3,2],[0,3,2,0],[1,2,0,3]]},
+  {id:7,rows:4,cols:4,maxMoves:17,showDuration:5,pattern:[[1,0,2,1],[0,3,1,0],[2,1,0,3],[1,0,3,2]]},
+  {id:8,rows:4,cols:4,maxMoves:16,showDuration:5,pattern:[[0,1,2,0],[1,4,0,2],[0,2,1,0],[2,0,1,3]]},
   {id:9,rows:4,cols:5,maxMoves:28,showDuration:5,pattern:[[0,1,2,1,0],[1,4,0,2,1],[0,2,1,3,0],[2,0,3,1,2]]},
   {id:10,rows:5,cols:5,maxMoves:28,showDuration:5,pattern:[[0,1,4,1,0],[1,2,3,2,1],[2,3,0,3,2],[1,2,3,2,1],[0,1,4,1,0]]},
   {id:11,rows:5,cols:5,maxMoves:28,showDuration:5,pattern:[[1,2,3,2,1],[2,0,1,0,2],[3,1,4,1,3],[2,0,1,0,2],[1,2,3,2,1]]},
