@@ -761,7 +761,7 @@ export default function SucculentZen() {
             {parseInt(localStorage.getItem("szen_level")||"0",10) > 0 && (
               <button onClick={() => { const s=parseInt(localStorage.getItem("szen_level")||"0",10); startLevel(s); setLevelIndex(s); }} style={{width:200,padding:"11px 0",borderRadius:40,background:"rgba(15,40,28,0.7)",border:"1px solid rgba(93,202,165,0.28)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",color:"rgba(255,255,255,0.75)",fontSize:13,letterSpacing:"0.05em",cursor:"pointer",marginBottom:24,outline:"none"}}>CONTINUE · LEVEL {parseInt(localStorage.getItem("szen_level")||"0",10)+1}</button>
             )}
-            <div style={{fontSize:11,color:"rgba(255,255,255,0.28)",letterSpacing:"0.12em",marginTop:8,textTransform:"uppercase"}}>10 levels · zen puzzle</div>
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.28)",letterSpacing:"0.12em",marginTop:8,textTransform:"uppercase"}}>{LEVELS.length} levels · zen puzzle</div>
             <div style={{fontSize:9,color:"rgba(255,255,255,0.14)",letterSpacing:"0.2em",marginTop:6}}>v1.0</div>
           </div>
         </div>
