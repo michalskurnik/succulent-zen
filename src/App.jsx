@@ -891,7 +891,7 @@ export default function SucculentZen() {
             <div style={{fontSize:56,marginBottom:8}}>🌸</div>
             <div style={{fontSize:22,fontWeight:500,color:"#e8d5a0",marginBottom:8}}>WELL DONE!</div>
             <div style={{fontSize:24,color:"#d4a030",letterSpacing:6,marginBottom:20}}>{"★".repeat(stars)}{"☆".repeat(3-stars)}</div>
-            <button onClick={()=>{const next=levelIndex+1<LEVELS.length?levelIndex+1:0;localStorage.setItem("szen_level",next);setLevelIndex(next);if(levelIndex===1){transitionTargetRef.current=next;setPhase(PHASES.TRANSITION);}else{startLevel(next);}}} style={{width:"100%",padding:"12px",borderRadius:24,background:"linear-gradient(135deg,#5dbfa0,#2d8a6a)",border:"none",color:"#fff",fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:8}}>Next Level →</button>
+            <button onClick={()=>{const next=levelIndex+1<LEVELS.length?levelIndex+1:0;localStorage.setItem("szen_level",next);setLevelIndex(next);const curr=LEVELS[levelIndex];const nxt=LEVELS[next];const gridChanged=curr.pattern.length!==nxt.pattern.length||curr.pattern[0].length!==nxt.pattern[0].length;if(gridChanged){transitionTargetRef.current=next;setPhase(PHASES.TRANSITION);}else{startLevel(next);}}} style={{width:"100%",padding:"12px",borderRadius:24,background:"linear-gradient(135deg,#5dbfa0,#2d8a6a)",border:"none",color:"#fff",fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:8}}>Next Level →</button>
             <button onClick={()=>startLevel(levelIndex)} style={{width:"100%",padding:"10px",borderRadius:24,background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.12)",color:"rgba(255,255,255,0.7)",fontSize:13,cursor:"pointer"}}>Play Again</button>
           </div>
         </div>
