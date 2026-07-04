@@ -1,6 +1,5 @@
 import UIKit
 import Capacitor
-import AppTrackingTransparency
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -9,17 +8,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         return true
-    }
-
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        if #available(iOS 14, *) {
-            guard ATTrackingManager.trackingAuthorizationStatus == .notDetermined else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                ATTrackingManager.requestTrackingAuthorization { _ in
-                    // AdMob is initialized from JavaScript after this resolves
-                }
-            }
-        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
