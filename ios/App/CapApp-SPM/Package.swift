@@ -12,8 +12,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/ionic-team/capacitor-swift-pm.git", exact: "8.3.4"),
-        .package(name: "CapacitorCommunityAdmob", path: "../../../node_modules/@capacitor-community/admob"),
-        .package(name: "CapacitorApp", path: "../../../node_modules/@capacitor/app")
+        .package(name: "CapacitorCommunityAdmob", path: "..\..\..\node_modules\@capacitor-community\admob"),
+        .package(name: "CapacitorApp", path: "..\..\..\node_modules\@capacitor\app")
     ],
     targets: [
         .target(
